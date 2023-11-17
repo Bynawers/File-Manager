@@ -1,0 +1,4 @@
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[1] (javadoc) JavadocPackage: Missing package-info.java file.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[7,1] (design) HideUtilityClassConstructor: Utility classes should not have a public or default constructor.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[8,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[8,29] (misc) FinalParameters: Parameter args should be final.
