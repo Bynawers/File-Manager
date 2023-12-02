@@ -3,8 +3,8 @@ package fr.uvsq.cprog;
 
 public class File extends FileSystem {
 
-    public File(String name, String path, long size) {
-        super(name, path, size);
+    public File(String name, String path, long size, int ner) {
+        super(name, path, size, ner);
     }
 
     @Override

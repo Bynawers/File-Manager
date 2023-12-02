@@ -2,10 +2,10 @@ package fr.uvsq.cprog;
 import java.util.List;
 
 public class Directory extends FileSystem {
-    private List<FileSystem> children; // Liste des fichiers et sous-répertoires
+    private List<FileSystem> children; 
 
-    public Directory(String name, String path, long size, List<FileSystem> children) {
-        super(name, path, size);
+    public Directory(String name, String path, long size, List<FileSystem> children, int ner) {
+        super(name, path, size, ner);
         this.children = children;
     }
 
