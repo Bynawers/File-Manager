@@ -1,9 +1,9 @@
 package fr.uvsq.cprog;
 
 
-public class File extends FileSystem {
+public class file extends ElementDirectory {
 
-    public File(String name, String path, long size, int ner) {
+    public file(String name, String path, long size, int ner) {
         super(name, path, size, ner);
     }
 

@@ -93,7 +93,7 @@
           <configuration>
              <archive>
                <manifest>
-                 <mainClass>fr.uvsq.cprog.GlobalFileManager</mainClass>
+                 <mainClass>fr.uvsq.cprog.App</mainClass>
                </manifest>
              </archive>
                <descriptorRefs>
