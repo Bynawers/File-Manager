@@ -3,11 +3,8 @@ package fr.uvsq.cprog;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jline.reader.impl.DefaultParser;
-
 /**
- * Hello world!
- *
+ * Basic App for test.
  */
 public class App {
     public static void main(final String[] args) {
@@ -22,7 +19,7 @@ public class App {
         children.add(f1);
         children.add(f2);
         children.add(f3);
-        
+
         root.setChildren(children);
         f1.cut();
         root.listContent();

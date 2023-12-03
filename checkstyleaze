@@ -1,0 +1,21 @@
+[ERROR] src/main/java/fr/uvsq/cprog/File.java:[31,12] (sizes) ParameterNumber: More than 7 parameters (found 8).
+[ERROR] src/main/java/fr/uvsq/cprog/File.java:[31,17] (whitespace) MethodParamPad: '(' is preceded with whitespace.
+[ERROR] src/main/java/fr/uvsq/cprog/File.java:[45] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/File.java:[52,17] (whitespace) MethodParamPad: '(' is preceded with whitespace.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[9,1] (design) HideUtilityClassConstructor: Utility classes should not have a public or default constructor.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[10,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[17,40] (coding) MagicNumber: '3' is a magic number.
+[ERROR] src/main/java/fr/uvsq/cprog/App.java:[18,40] (coding) MagicNumber: '4' is a magic number.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[29,29] (whitespace) MethodParamPad: '(' is preceded with whitespace.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[50,29] (whitespace) MethodParamPad: '(' is preceded with whitespace.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[71,38] (javadoc) JavadocMethod: Expected @param tag for 'nameTmp'.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[86,38] (javadoc) JavadocMethod: Expected @param tag for 'pathTmp'.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[101,36] (javadoc) JavadocMethod: Expected @param tag for 'sizeTmp'.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[125,43] (javadoc) JavadocMethod: Expected @param tag for 'parentTmp'.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[140,44] (javadoc) JavadocMethod: Expected @param tag for 'annotationTmp'.
+[ERROR] src/main/java/fr/uvsq/cprog/ElementRepertory.java:[157,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/Directory.java:[78,5] (design) DesignForExtension: Class 'Directory' looks like designed for extension (can be subclassed), but the method 'setChildren' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Directory' final or making the method 'setChildren' static/final/abstract/empty, or adding allowed annotation for the method.
+[ERROR] src/main/java/fr/uvsq/cprog/Directory.java:[78,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/Directory.java:[99,35] (javadoc) JavadocMethod: Expected @param tag for 'name'.
+[ERROR] src/main/java/fr/uvsq/cprog/Directory.java:[107,39] (coding) SimplifyBooleanExpression: Expression can be simplified.
+[ERROR] src/main/java/fr/uvsq/cprog/Directory.java:[116,43] (javadoc) JavadocMethod: Expected @param tag for 'ner'.

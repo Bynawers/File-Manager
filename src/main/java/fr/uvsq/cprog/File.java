@@ -3,9 +3,13 @@ package fr.uvsq.cprog;
 
 public class File extends ElementRepertory {
 
-    /** Types of a file. */
+    /**
+     * Types of a file.
+     */
     public enum FileType {
+        /** Type text in format txt. */
         TEXT,
+        /** Type image in binary. */
         IMAGE
     }
     /** The content of the element. */
@@ -15,34 +19,42 @@ public class File extends ElementRepertory {
 
     /**
      * Constructor for the File class.
-     *
-     * @param name The name of the file.
-     * @param path The path of the file.
-     * @param size The size of the file.
-     * @param NER  The number of the file.
-     * @param content  The content of the file.
-     * @param type  The type of the file.
+     * @param nameTmp The name of the file.
+     * @param pathTmp The path of the file.
+     * @param sizeTmp The size of the file.
+     * @param nerTmp  The number of the file.
+     * @param annotationTmp  The annotation of the file.
+     * @param contentTmp The content of the file.
+     * @param parentTmp  The parent of the file.
+     * @param typeTmp  The type of the file.
      */
-    public File(
-        final String name,
-        final String path,
-        final long size,
-        final int NER,
-        final String annotation,
-        final String content,
-        final FileType type,
-        final Directory parent
+    public File (
+        final String nameTmp,
+        final String pathTmp,
+        final long sizeTmp,
+        final int nerTmp,
+        final String annotationTmp,
+        final String contentTmp,
+        final Directory parentTmp,
+        final FileType typeTmp
     ) {
-        super(name, path, size, NER, annotation, parent);
-        this.content = content;
-        this.type = type;
+        super(nameTmp, pathTmp, sizeTmp, nerTmp, annotationTmp, parentTmp);
+        this.content = contentTmp;
+        this.type = typeTmp;
     }
-    public File(
-        final String name,
-        final int NER,
-        final Directory parent
+    
+    /**
+     * Minimal constructor for the File class.
+     * @param nameTmp The name of the file.
+     * @param nerTmp  The number of the file.
+     * @param parentTmp  The parent of the file.
+     */
+    public File (
+        final String nameTmp,
+        final int nerTmp,
+        final Directory parentTmp
     ) {
-        super(name, NER, parent);
+        super(nameTmp, nerTmp, parentTmp);
     }
 
     /**
@@ -85,12 +97,12 @@ public class File extends ElementRepertory {
     @Override
     public void listContent() {
         System.out.println(
-            "   (Fichier) " + 
-            this.getNER() + " " + 
-            this.getName() + " " + 
-            this.getSize() + " " +
-            this.getType() + " " +
-            this.getAnnotation()
+            "   (Fichier) "
+            + this.getNer() + " "
+            + this.getName() + " "
+            + this.getSize() + " "
+            + this.getType() + " "
+            + this.getAnnotation()
         );
     }
 
@@ -99,20 +111,19 @@ public class File extends ElementRepertory {
      */
     public void cut() {
         if (this.getParent() != null) {
-            this.getParent().deleteChildren(getNER());
+            this.getParent().deleteChildren(getNer());
             this.setParent(null);
         }
     }
 
     /**
      * Display the content of a file, or the size
-     * if it's not a text file
+     * if it's not a text file.
      */
     public void visualization() {
         if (this.type == FileType.TEXT) {
             System.out.println(this.content);
-        }
-        else {
+        } else {
             System.out.println(this.getSize());
         }
     }

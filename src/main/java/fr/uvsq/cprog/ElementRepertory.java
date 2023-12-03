@@ -11,46 +11,52 @@ public abstract class ElementRepertory {
     /** The size of the element. */
     private long size;
     /** The number of the element. */
-    private int NER;
-    /** The annotation of the element*/
+    private int ner;
+    /** The annotation of the element. */
     private String annotation;
-    /** The parent instance of the element */
+    /** The parent instance of the element. */
     private Directory parent;
+
     /**
      * Constructor for the ElementRepertory class.
-     *
-     * @param name The name of the element.
-     * @param path The path of the element.
-     * @param size The size of the element.
-     * @param NER  The number of each directory (or file).
-     * @param annotation .
+     * @param nameTmp The name of the element.
+     * @param pathTmp The path of the element.
+     * @param sizeTmp The size of the element.
+     * @param nerTmp  The number of each directory (or file).
+     * @param annotationTmp The annotation of the element.
+     * @param parentTmp The parent of the element.
      */
+    public ElementRepertory(
+        final String nameTmp,
+        final String pathTmp,
+        final long sizeTmp,
+        final int nerTmp,
+        final String annotationTmp,
+        final Directory parentTmp
+    ) {
+        this.name = nameTmp;
+        this.path = pathTmp;
+        this.size = sizeTmp;
+        this.ner = nerTmp;
+        this.annotation = annotationTmp;
+        this.parent = parentTmp;
+    }
+    /**
+     * Minimal constructor for the ElementRepertory class.
+     * @param nameTmp The name of the element.
+     * @param nerTmp  The number of each directory (or file).
+     * @param parentTmp The parent of the element.
+     */
+    public ElementRepertory(
+        final String nameTmp,
+        final int nerTmp,
+        final Directory parentTmp
+    ) {
+        this.name = nameTmp;
+        this.ner = nerTmp;
+        this.parent = parentTmp;
+    }
 
-    public ElementRepertory(
-        final String name,
-        final String path,
-        final long size,
-        final int NER,
-        final String annotation,
-        final Directory parent
-    ) {
-        this.name = name;
-        this.path = path;
-        this.size = size;
-        this.NER = NER;
-        this.annotation = annotation;
-        this.parent = parent;
-    }
-    public ElementRepertory(
-        final String name,
-        final int NER,
-        final Directory parent
-    ) {
-        this.name = name;
-        this.NER = NER;
-        this.parent = parent;
-    }
-    
     /**
      * Gets the name of the element.
      *
@@ -59,8 +65,12 @@ public abstract class ElementRepertory {
     public String getName() {
         return name;
     }
-    public void setName(final String name) {
-        this.name = name;
+    /**
+     * set the name of the element.
+     * @param nameTmp The name of the element.
+     */
+    public void setName(final String nameTmp) {
+        this.name = nameTmp;
     }
 
     /**
@@ -71,8 +81,12 @@ public abstract class ElementRepertory {
     public String getPath() {
         return path;
     }
-    public void setPath(final String path) {
-        this.path = path;
+     /**
+     * set the name of the path.
+     * * @param pathTmp The path of the element.
+     */
+    public void setPath(final String pathTmp) {
+        this.path = pathTmp;
     }
 
     /**
@@ -83,8 +97,12 @@ public abstract class ElementRepertory {
     public long getSize() {
         return size;
     }
-    public void setSize(final long size) {
-        this.size = size;
+     /**
+     * set the name of the size.
+     * * @param sizeTmp The size of the element.
+     */
+    public void setSize(final long sizeTmp) {
+        this.size = sizeTmp;
     }
 
     /**
@@ -92,8 +110,8 @@ public abstract class ElementRepertory {
      *
      * @return The number of the element.
      */
-    public long getNER() {
-        return NER;
+    public long getNer() {
+        return ner;
     }
 
     /**
@@ -104,8 +122,12 @@ public abstract class ElementRepertory {
     public Directory getParent() {
         return parent;
     }
-    public void setParent(final Directory parent) {
-        this.parent = parent;
+     /**
+     * set the name of the parent.
+     * @param parentTmp The parent of the element.
+     */
+    public void setParent(final Directory parentTmp) {
+        this.parent = parentTmp;
     }
 
     /**
@@ -116,8 +138,12 @@ public abstract class ElementRepertory {
     public String getAnnotation() {
         return annotation;
     }
-    public void setAnnotation(final String annotation) {
-        this.annotation = annotation;
+     /**
+     * set the name of the annotation.
+     * * @param annotationTmp The annotation of the element.
+     */
+    public void setAnnotation(final String annotationTmp) {
+        this.annotation = annotationTmp;
     }
 
     /**

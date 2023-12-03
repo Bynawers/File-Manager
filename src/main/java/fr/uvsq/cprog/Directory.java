@@ -1,7 +1,5 @@
 package fr.uvsq.cprog;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.io.File;
 import java.util.List;
 
 public class Directory extends ElementRepertory {
@@ -10,41 +8,42 @@ public class Directory extends ElementRepertory {
     * List of child elements in the directory.
     */
     private List<ElementRepertory> children;
-    /**
-    * Parent of child elements in the directory.
-    */
-    private Directory parent;
 
     /**
      * Constructs a new Directory with the specified attributes.
      *
-     * @param name The name of the directory.
-     * @param path The path of the directory.
-     * @param size The size of the directory.
-     * @param children The list of child elements in the directory.
-     * @param NER The number of the directory.
-     * @param annotation The annotation of the directory.
-     * @param parent The parent of the directory.
+     * @param nameTmp The name of the directory.
+     * @param pathTmp The path of the directory.
+     * @param sizeTmp The size of the directory.
+     * @param childrenTmp The list of child elements in the directory.
+     * @param nerTmp The number of the directory.
+     * @param annotationTmp The annotation of the directory.
+     * @param parentTmp The parent of the directory.
      */
     public Directory(
-        final String name,
-        final String path,
-        final long size,
-        final List<ElementRepertory> children,
-        final int NER,
-        final String annotation,
-        final Directory parent
+        final String nameTmp,
+        final String pathTmp,
+        final long sizeTmp,
+        final List<ElementRepertory> childrenTmp,
+        final int nerTmp,
+        final String annotationTmp,
+        final Directory parentTmp
     ) {
-        super(name, path, size, NER, annotation, parent);
-        this.children = children;
-        this.parent = parent;
+        super(nameTmp, pathTmp, sizeTmp, nerTmp, annotationTmp, parentTmp);
+        this.children = childrenTmp;
     }
+    /**
+     * Minimal constructor for a new Directory with the specified attributes.
+     * @param nameTmp The name of the directory.
+     * @param nerTmp The number of the directory.
+     * @param parentTmp The parent of the directory.
+     */
     public Directory(
-        final String name,
-        final int NER,
-        final Directory parent
+        final String nameTmp,
+        final int nerTmp,
+        final Directory parentTmp
     ) {
-        super(name, NER, parent);
+        super(nameTmp, nerTmp, parentTmp);
     }
 
     /**
@@ -114,14 +113,14 @@ public class Directory extends ElementRepertory {
     /**
      * Delete a children of the current file from the NER.
      */
-    public void deleteChildren(final long NER) {
+    public void deleteChildren(final long ner) {
         if (this.children == null) {
             return;
         }
         Iterator<ElementRepertory> iterator = children.iterator();
         while (iterator.hasNext()) {
             ElementRepertory element = iterator.next();
-            if (element.getNER() == NER) {
+            if (element.getNer() == ner) {
                 iterator.remove();
             }
         }
