@@ -18,10 +18,24 @@
   </properties>
 
   <dependencies>
+
+
+
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.9.1</version>
+      <groupId>org.jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>3.21.0</version>
+  </dependency>
+
+
+
+
+
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -74,7 +88,19 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+             <archive>
+               <manifest>
+                 <mainClass>fr.uvsq.cprog.Directory</mainClass>
+               </manifest>
+             </archive>
+               <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+          </configuration>
+        </plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>

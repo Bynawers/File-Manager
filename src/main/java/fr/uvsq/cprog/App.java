@@ -1,11 +1,30 @@
 package fr.uvsq.cprog;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jline.reader.impl.DefaultParser;
+
 /**
  * Hello world!
  *
  */
 public class App {
     public static void main(final String[] args) {
-        System.out.println("Hello World!");
+
+        Directory root = new Directory("root", 1, null);
+
+        List<ElementRepertory> children = new ArrayList<>();
+
+        File f1 = new File("fichier1", 2, root);
+        File f2 = new File("fichier2", 3, root);
+        File f3 = new File("fichier3", 4, root);
+        children.add(f1);
+        children.add(f2);
+        children.add(f3);
+        
+        root.setChildren(children);
+        f1.cut();
+        root.listContent();
     }
 }
