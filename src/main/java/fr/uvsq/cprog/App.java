@@ -1,6 +1,6 @@
 package fr.uvsq.cprog;
 
-/**
+/*
  * Hello world!
  *
  */

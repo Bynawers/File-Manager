@@ -93,7 +93,7 @@
           <configuration>
              <archive>
                <manifest>
-                 <mainClass>fr.uvsq.cprog.App</mainClass>
+                 <mainClass>fr.uvsq.cprog.Directory</mainClass>
                </manifest>
              </archive>
                <descriptorRefs>
