@@ -13,8 +13,6 @@ public class Directory extends ElementRepertory {
      * Constructs a new Directory with the specified attributes.
      *
      * @param nameTmp The name of the directory.
-     * @param pathTmp The path of the directory.
-     * @param sizeTmp The size of the directory.
      * @param childrenTmp The list of child elements in the directory.
      * @param nerTmp The number of the directory.
      * @param annotationTmp The annotation of the directory.
@@ -22,14 +20,12 @@ public class Directory extends ElementRepertory {
      */
     public Directory(
         final String nameTmp,
-        final String pathTmp,
-        final long sizeTmp,
         final List<ElementRepertory> childrenTmp,
         final int nerTmp,
         final String annotationTmp,
         final Directory parentTmp
     ) {
-        super(nameTmp, pathTmp, sizeTmp, nerTmp, annotationTmp, parentTmp);
+        super(nameTmp, nerTmp, annotationTmp, parentTmp);
         this.children = childrenTmp;
     }
     /**
@@ -108,6 +104,24 @@ public class Directory extends ElementRepertory {
                 element.listContent();
             }
         }
+    }
+
+    /**
+     * Calculate directory size from his content.
+     * @return the size of the directory.
+     */
+    @Override
+    public long getSize() {
+        int directorySize = 0;
+
+        if (this.children == null) {
+            return 0;
+        }
+
+        for (ElementRepertory element : children) {
+            directorySize += element.getSize();
+        }
+        return directorySize;
     }
 
     /**

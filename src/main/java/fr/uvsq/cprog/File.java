@@ -20,8 +20,6 @@ public class File extends ElementRepertory {
     /**
      * Constructor for the File class.
      * @param nameTmp The name of the file.
-     * @param pathTmp The path of the file.
-     * @param sizeTmp The size of the file.
      * @param nerTmp  The number of the file.
      * @param annotationTmp  The annotation of the file.
      * @param contentTmp The content of the file.
@@ -30,15 +28,13 @@ public class File extends ElementRepertory {
      */
     public File (
         final String nameTmp,
-        final String pathTmp,
-        final long sizeTmp,
         final int nerTmp,
         final String annotationTmp,
         final String contentTmp,
         final Directory parentTmp,
         final FileType typeTmp
     ) {
-        super(nameTmp, pathTmp, sizeTmp, nerTmp, annotationTmp, parentTmp);
+        super(nameTmp, nerTmp, annotationTmp, parentTmp);
         this.content = contentTmp;
         this.type = typeTmp;
     }
@@ -89,6 +85,17 @@ public class File extends ElementRepertory {
     @Override
     public boolean isDirectory() {
         return false;
+    }
+    /**
+     * calculate file size from his content.
+     * @return the size of the file.
+     */
+    @Override
+    public long getSize() {
+        if (content == null) {
+            return 0;
+        }
+        return this.getContent().length();
     }
 
     /**

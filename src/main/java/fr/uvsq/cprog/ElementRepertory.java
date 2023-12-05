@@ -8,8 +8,6 @@ public abstract class ElementRepertory {
     private String name;
     /** The path of the element. */
     private String path;
-    /** The size of the element. */
-    private long size;
     /** The number of the element. */
     private int ner;
     /** The annotation of the element. */
@@ -20,26 +18,23 @@ public abstract class ElementRepertory {
     /**
      * Constructor for the ElementRepertory class.
      * @param nameTmp The name of the element.
-     * @param pathTmp The path of the element.
-     * @param sizeTmp The size of the element.
      * @param nerTmp  The number of each directory (or file).
      * @param annotationTmp The annotation of the element.
      * @param parentTmp The parent of the element.
      */
     public ElementRepertory(
         final String nameTmp,
-        final String pathTmp,
-        final long sizeTmp,
         final int nerTmp,
         final String annotationTmp,
         final Directory parentTmp
     ) {
         this.name = nameTmp;
-        this.path = pathTmp;
-        this.size = sizeTmp;
         this.ner = nerTmp;
         this.annotation = annotationTmp;
         this.parent = parentTmp;
+        this.path = parentTmp == null 
+            ? "./" + nameTmp
+            : parentTmp.getPath() + "/" + nameTmp;
     }
     /**
      * Minimal constructor for the ElementRepertory class.
@@ -55,6 +50,9 @@ public abstract class ElementRepertory {
         this.name = nameTmp;
         this.ner = nerTmp;
         this.parent = parentTmp;
+        this.path = parentTmp == null 
+            ? "./" + nameTmp
+            : parentTmp.getPath() + "/" + nameTmp;
     }
 
     /**
@@ -87,22 +85,6 @@ public abstract class ElementRepertory {
      */
     public void setPath(final String pathTmp) {
         this.path = pathTmp;
-    }
-
-    /**
-     * Gets the size of the element.
-     *
-     * @return The size of the element.
-     */
-    public long getSize() {
-        return size;
-    }
-     /**
-     * set the name of the size.
-     * * @param sizeTmp The size of the element.
-     */
-    public void setSize(final long sizeTmp) {
-        this.size = sizeTmp;
     }
 
     /**
@@ -158,6 +140,12 @@ public abstract class ElementRepertory {
      * @return true if the element is a directory, false otherwise.
      */
     public abstract boolean isDirectory();
+    /**
+     * Gets the size of the element.
+     *
+     * @return The size of the element.
+     */
+    public abstract long getSize();
 
     public abstract void listContent();
 }
