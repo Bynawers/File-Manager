@@ -1,11 +1,20 @@
 package fr.uvsq.cprog;
 
-/*
- * Hello world!
- *
+import java.io.IOException;
+
+/**
+ * Basic App for test.
  */
 public class App {
     public static void main(final String[] args) {
-        System.out.println("Hello World!");
+
+        CommandLine app = new CommandLine();
+        app.initializeCommands();
+
+        try {
+            app.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

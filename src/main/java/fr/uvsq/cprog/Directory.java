@@ -1,25 +1,45 @@
 package fr.uvsq.cprog;
-import java.util.ArrayList;
-import java.io.File;
+import java.util.Iterator;
 import java.util.List;
+
 public class Directory extends ElementRepertory {
+
     /**
     * List of child elements in the directory.
     */
     private List<ElementRepertory> children;
+
     /**
      * Constructs a new Directory with the specified attributes.
      *
-     * @param name The name of the directory.
-     * @param path The path of the directory.
-     * @param size The size of the directory.
-     * @param children The list of child elements in the directory.
-     * @param ner The number of the directory .
+     * @param nameTmp The name of the directory.
+     * @param childrenTmp The list of child elements in the directory.
+     * @param nerTmp The number of the directory.
+     * @param annotationTmp The annotation of the directory.
+     * @param parentTmp The parent of the directory.
      */
-    public Directory(final String name, final String path, final long size,
-     final List<ElementRepertory> children, final int ner) {
-        super(name, path, size, ner);
-        this.children = children;
+    public Directory(
+        final String nameTmp,
+        final List<ElementRepertory> childrenTmp,
+        final int nerTmp,
+        final String annotationTmp,
+        final Directory parentTmp
+    ) {
+        super(nameTmp, nerTmp, annotationTmp, parentTmp);
+        this.children = childrenTmp;
+    }
+    /**
+     * Minimal constructor for a new Directory with the specified attributes.
+     * @param nameTmp The name of the directory.
+     * @param nerTmp The number of the directory.
+     * @param parentTmp The parent of the directory.
+     */
+    public Directory(
+        final String nameTmp,
+        final int nerTmp,
+        final Directory parentTmp
+    ) {
+        super(nameTmp, nerTmp, parentTmp);
     }
 
     /**
@@ -29,53 +49,93 @@ public class Directory extends ElementRepertory {
      */
     @Override
     public boolean isFile() {
+        return true;
+    }
+    /**
+     * Indicates if the element is a directory.
+     *
+     * @return false since this is a file.
+     */
+    @Override
+    public boolean isDirectory() {
         return false;
     }
 
-    /**
-     * Indicates if the element is a Directory.
-     *
-     * @return true if the element is a Directory, false otherwise.
-    */
-    @Override
-    public boolean isDirectory() {
-        return true;
-    }
     /**
      * Returns the children elements of the directory.
      *
      * @return List of ElementDirectory representing
      *     the children of the directory.
-    */
-
+     */
     public List<ElementRepertory> getChildren() {
-        return children;
+        return this.children;
+    }
+
+    public void setChildren(final List<ElementRepertory> newChildrens) {
+        this.children = newChildrens;
     }
 
     /**
-     * Recursively returns all files from the specified directory path.
-     *
-     * @param path The path of the directory to retrieve files from.
-    */
-    public void returnAllFiles(final String path) {
-        returnFiles(new File(path));
+     * Browse all folders in the current folder and list all files.
+     */
+    @Override
+    public void listContent() {
+        if (this.children == null) {
+            return;
+        }
+        System.out.println("(Dossier) " + this.getName() + " :");
+        for (ElementRepertory element : children) {
+            element.listContent();
+        }
     }
 
-    private void returnFiles(final File directory) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                ElementRepertory element;
+    /**
+     * Find a specific file from his name.
+     */
+    public void find(final String name) {
+        if (this.children == null) {
+            return;
+        }
+        for (ElementRepertory element : children) {
+            if (element.getName() == name) {
+                element.listContent();
+            }
+            if (element.isDirectory() == true) {
+                element.listContent();
+            }
+        }
+    }
 
-                if (file.isDirectory()) {
-                    element = new Directory(file.getName(), file.getPath(),
-                                        file.length(), new ArrayList<>(), 0);
-                    returnFiles(file);
-                } else {
-                    element = new file(file.getName(), file.getPath(),
-                                        file.length(), 0);
-                }
-                children.add(element);
+    /**
+     * Calculate directory size from his content.
+     * @return the size of the directory.
+     */
+    @Override
+    public long getSize() {
+        int directorySize = 0;
+
+        if (this.children == null) {
+            return 0;
+        }
+
+        for (ElementRepertory element : children) {
+            directorySize += element.getSize();
+        }
+        return directorySize;
+    }
+
+    /**
+     * Delete a children of the current file from the NER.
+     */
+    public void deleteChildren(final long ner) {
+        if (this.children == null) {
+            return;
+        }
+        Iterator<ElementRepertory> iterator = children.iterator();
+        while (iterator.hasNext()) {
+            ElementRepertory element = iterator.next();
+            if (element.getNer() == ner) {
+                iterator.remove();
             }
         }
     }
