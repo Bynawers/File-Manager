@@ -5,7 +5,12 @@ import java.io.IOException;
 /**
  * Basic App for test.
  */
-public class App {
+public final class App {
+    /**
+     * Main method to start the application.
+     *
+     * @param args Command-line arguments.
+    */
     public static void main(final String[] args) {
 
         CommandLine app = new CommandLine();
@@ -16,5 +21,8 @@ public class App {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private App() {
+        throw new AssertionError("This class should not be instantiated.");
     }
 }

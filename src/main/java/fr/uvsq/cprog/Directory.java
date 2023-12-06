@@ -1,4 +1,10 @@
 package fr.uvsq.cprog;
+//import java.io.IOException;
+//import java.nio.file.DirectoryStream;
+//import java.nio.file.Files;
+import java.io.File;
+//import java.nio.file.Path;
+//import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +79,11 @@ public class Directory extends ElementRepertory {
     public List<ElementRepertory> getChildren() {
         return this.children;
     }
-
+    /**
+     * Sets the children elements of the directory.
+     *
+     * @param newChildrens The new list of children elements.
+     */
     public void setChildren(final List<ElementRepertory> newChildrens) {
         this.children = newChildrens;
     }
@@ -93,7 +103,9 @@ public class Directory extends ElementRepertory {
     }
 
     /**
-     * Find a specific file from his name.
+     * Find a specific file from its name.
+     *
+     * @param name The name of the file to find.
      */
     public void find(final String name) {
         if (this.children == null) {
@@ -103,11 +115,41 @@ public class Directory extends ElementRepertory {
             if (element.getName() == name) {
                 element.listContent();
             }
-            if (element.isDirectory() == true) {
+            if (element.isDirectory()) {
                 element.listContent();
             }
         }
     }
+    /**
+     * Find a specific file from its name recursively.
+     *
+     * @param name The name of the file to find.
+     */
+    public void findRecursive(final String name) {
+
+        File directory = new File(this.getPath()); //???
+        File[] directoryChildrens = directory.listFiles();
+        System.out.println(directoryChildrens);
+
+        if (directoryChildrens != null) {
+            for (File file : directoryChildrens) {
+                if (file.toString() == name) {
+                    file.listFiles();
+                }
+                Boolean isDirectory = file.isDirectory();
+
+                if (isDirectory) {
+                   System.out.println("c'est un repertoire");
+                } else {
+                    System.out.print(file.getName() + " ");
+
+                }
+            }
+            System.out.println();
+        }
+    }
+
+
 
     /**
      * Calculate directory size from his content.
@@ -128,7 +170,10 @@ public class Directory extends ElementRepertory {
     }
 
     /**
-     * Delete a children of the current file from the NER.
+     * Delete a child of the current directory
+     * based on the NER (Number of Element Repertory).
+     * @param ner The NER (Number of Element Repertory)
+     * of the child to be deleted.
      */
     public void deleteChildren(final long ner) {
         if (this.children == null) {

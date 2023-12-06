@@ -26,7 +26,7 @@ public class File extends ElementRepertory {
      * @param parentTmp  The parent of the file.
      * @param typeTmp  The type of the file.
      */
-    public File (
+    public File(
         final String nameTmp,
         final int nerTmp,
         final String annotationTmp,
@@ -38,14 +38,14 @@ public class File extends ElementRepertory {
         this.content = contentTmp;
         this.type = typeTmp;
     }
-    
+
     /**
      * Minimal constructor for the File class.
      * @param nameTmp The name of the file.
      * @param nerTmp  The number of the file.
      * @param parentTmp  The parent of the file.
      */
-    public File (
+    public File(
         final String nameTmp,
         final int nerTmp,
         final Directory parentTmp

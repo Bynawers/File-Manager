@@ -32,7 +32,7 @@ public abstract class ElementRepertory {
         this.ner = nerTmp;
         this.annotation = annotationTmp;
         this.parent = parentTmp;
-        this.path = parentTmp == null 
+        this.path = parentTmp == null
             ? "./" + nameTmp
             : parentTmp.getPath() + "/" + nameTmp;
     }
@@ -50,7 +50,7 @@ public abstract class ElementRepertory {
         this.name = nameTmp;
         this.ner = nerTmp;
         this.parent = parentTmp;
-        this.path = parentTmp == null 
+        this.path = parentTmp == null
             ? "./" + nameTmp
             : parentTmp.getPath() + "/" + nameTmp;
     }
@@ -81,7 +81,7 @@ public abstract class ElementRepertory {
     }
      /**
      * set the name of the path.
-     * * @param pathTmp The path of the element.
+     * @param pathTmp The path of the element.
      */
     public void setPath(final String pathTmp) {
         this.path = pathTmp;
@@ -122,7 +122,7 @@ public abstract class ElementRepertory {
     }
      /**
      * set the name of the annotation.
-     * * @param annotationTmp The annotation of the element.
+     * @param annotationTmp The annotation of the element.
      */
     public void setAnnotation(final String annotationTmp) {
         this.annotation = annotationTmp;
@@ -146,6 +146,8 @@ public abstract class ElementRepertory {
      * @return The size of the element.
      */
     public abstract long getSize();
-
+    /**
+     * Lists the content of the element.
+    */
     public abstract void listContent();
 }
