@@ -1,4 +1,5 @@
 package fr.uvsq.cprog;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class Directory extends ElementRepertory {
         final Directory parentTmp
     ) {
         super(nameTmp, nerTmp, parentTmp);
+        List<ElementRepertory> list = new ArrayList<>();
+        this.children = list;
     }
 
     /**

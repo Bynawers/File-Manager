@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class CommandLine {
 
@@ -35,7 +36,10 @@ public class CommandLine {
 
         AnsiConsole.systemInstall();
 
-        Directory root = new Directory("root", 1, null);
+  
+        Path currRelativePath = Paths.get("");
+        String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+        Directory root = new Directory("miniprojet-grp-11_22", 1, null);
         Directory current = root;
 
         long previousNer = -1;
@@ -65,6 +69,7 @@ public class CommandLine {
                 ? parsedLine[2] 
                 : parsedLine[1] 
                 : null;
+            Directory cmdParent = current;
 
             Command command = commands.get(cmdName);
             
@@ -72,6 +77,7 @@ public class CommandLine {
                 command.ner = cmdNer;
                 command.name = cmdName;
                 command.args = cmdArgs;
+                command.parent = cmdParent;
                 command.execute();
             } else {
                 System.out.println(cmdName + " command not found");
@@ -94,6 +100,7 @@ abstract class Command {
     long ner;
     String name;
     String args;
+    Directory parent;
 
     abstract String getName();
     abstract void execute();
@@ -108,29 +115,32 @@ class CreateDirectoryCommand extends Command {
 
     @Override
     public void execute() {
-        Directory root = new Directory("root", 1, null);
-        Directory current = root;
 
-        if (args != null) {
-            String dirName = args;
-            int ner = 0;// TODO
-            Path newDirectoryPath = Paths.get(dirName);
-            Directory newDirectory = new Directory(dirName, ner, current);
-            newDirectory.setParent(current);
-
-            try {
-                Files.createDirectory(newDirectoryPath);
-            } catch (FileAlreadyExistsException e) {
-                System.out.println("Erreur : Le dossier '" + dirName + "' existe déjà dans " + current.getPath() + ".");
-            } catch (IOException e) {
-                System.out.println("Erreur : Impossible de creer le dossier.");
-                e.printStackTrace();
-            }
-            System.out.println("Création du dossier : " + newDirectory.getName());
-        }
-        else {
+        if (args == null) {
             System.out.println("Veuillez entrer le nom du dossier");
+            return;
         }
+        String dirName = args;
+        int ner = 0;// TODO
+        
+        
+        String newDirectoryPath = currAbsolutePathString+ "/" + dirName;
+        Directory newDirectory = new Directory(dirName, ner, parent);
+        List<ElementRepertory> sons = parent.getChildren();
+        sons.add(newDirectory);
+        parent.setChildren(sons);
+
+        try {
+            System.out.println("dscvdsljnjs  "+newDirectoryPath);
+            Path newPath = Paths.get(newDirectoryPath); 
+            Files.createDirectory(newPath);
+        } catch (FileAlreadyExistsException e) {
+            System.out.println("Erreur : Le dossier '" + dirName + "' existe déjà dans " + parent.getPath() + ".");
+        } catch (IOException e) {
+            System.out.println("Erreur : Impossible de creer le dossier.");
+            e.printStackTrace();
+        }
+        System.out.println("Création du dossier : " + newDirectory.getName());
     }
 }
 
@@ -154,16 +164,15 @@ class CdCommand extends Command { // TO fIX
 
     @Override
     public void execute() {
-        Directory root = new Directory("root", 1, null);
-        Directory current = root;
 
         if (args != null) {
             String targetPath = args;
             Path newPath = Paths.get(targetPath);
+            //String chemin = parent.getPath()+"/"+args;
 
             if (Files.exists(newPath) && Files.isDirectory(newPath)) {
-                current = new Directory(targetPath, 0, current);
-                System.out.println("Changement du répertoire courant : " + current.getPath());
+                parent = new Directory(targetPath, 0, parent);
+                System.out.println("Changement du répertoire courant : " + parent.getPath());
             }else{
                 System.out.println("Ce chemin: '"+ newPath +"'' est introuvable");
             }
