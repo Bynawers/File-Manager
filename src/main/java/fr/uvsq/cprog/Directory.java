@@ -3,8 +3,8 @@ package fr.uvsq.cprog;
 //import java.nio.file.DirectoryStream;
 //import java.nio.file.Files;
 import java.io.File;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -125,27 +125,26 @@ public class Directory extends ElementRepertory {
      *
      * @param name The name of the file to find.
      */
-    public void findRecursive(final String name) {
-
-        File directory = new File(this.getPath()); //???
+    public void findRecursive(final String name, String path) {
+        File directory = new File(this.getPath().replaceFirst("^\\./", ""));
+        searchFile(directory, name, path);
+    }
+    
+    private void searchFile(File directory, String name, String path) {
         File[] directoryChildrens = directory.listFiles();
-        System.out.println(directoryChildrens);
-
+        
         if (directoryChildrens != null) {
             for (File file : directoryChildrens) {
-                if (file.toString() == name) {
-                    file.listFiles();
-                }
                 Boolean isDirectory = file.isDirectory();
-
                 if (isDirectory) {
-                   System.out.println("c'est un repertoire");
-                } else {
-                    System.out.print(file.getName() + " ");
-
+                    String newPath = path + "/" + file.getName();
+                    searchFile(file, name, newPath);
                 }
+                if (file.getName().equals(name)) {
+                    System.out.println("Le fichier " + file.getName() + " a été trouvé dans le dossier " + path);
+                }
+
             }
-            System.out.println();
         }
     }
 

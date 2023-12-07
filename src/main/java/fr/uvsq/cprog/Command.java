@@ -178,9 +178,10 @@ class FindCommand extends Command {
     public void execute() {
         if (args != null) {
             Directory currentDirectory = new Directory(path, 0, null);
-            currentDirectory.findRecursive(args);
+            currentDirectory.findRecursive(args,path);
         } else {
             System.out.println("Aide : find <nom_fichier>");
         }
     }
+    
 }
