@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 abstract class Command {
     /** The ner in the command. */
@@ -164,7 +166,38 @@ class VisuCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("visu");
+        if (args == null) {
+            System.out.println("Aide : <NER> visu");
+        }
+        String newP = path + "/" + args;
+        File file = new File(newP);
+
+        if (file.exists()) {
+            String fileName = file.getName();
+
+            if (fileName.endsWith(".txt")) {
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(newP));
+                    StringBuilder content = new StringBuilder();
+                    String line;
+                    System.out.println("Le contenu du fichier " + fileName + " est :");
+                    while ((line = reader.readLine()) != null) {
+                        content.append(line).append("\n");
+                    }
+                    reader.close();
+                    System.out.println(content.toString());
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                System.out.println("Le fichier n'est pas un texte");
+                long fileSize = file.length();
+                System.out.println("La taille du fichier est de : " + fileSize);
+            }
+        }else{
+            System.out.println("Le fichier n'existe pas");
+        }
     }
 }
 

@@ -22,6 +22,8 @@ public class CommandLine {
         addCommand(new ExitCommand());
         addCommand(new LsCommand());
         addCommand(new FindCommand());
+        addCommand(new VisuCommand());
+
     }
 
     private void addCommand(final Command command) {
