@@ -17,10 +17,17 @@ abstract class Command {
     /** The arguments of the command. */
     String args;
     /** The path of the command. */
-    String path;
+    private String path;
 
     abstract String getName();
     abstract void execute();
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+    public String getPath() {
+        return path;
+    }
 }
 
 
@@ -40,13 +47,13 @@ class CreateDirectoryCommand extends Command {
         }
 
         try {
-            String newPath = path + "/" + args;
+            String newPath = getPath() + "/" + args;
             Path pathRef = Paths.get(newPath);
             System.out.println(pathRef);
             Files.createDirectory(pathRef);
         } catch (FileAlreadyExistsException e) {
             System.out.println("Erreur : Le dossier '"
-                                + args + "' existe déjà");
+                + args + "' existe déjà");
             return;
         } catch (IOException e) {
             System.out.println("Erreur : Impossible de creer le dossier.");
@@ -81,11 +88,11 @@ class CdCommand extends Command {
             System.out.println("Aide : cd <chemin_du_dossier>");
         }
 
-        String newPath = path + "/" + args;
+        String newPath = getPath() + "/" + args;
         Path pathRef = Paths.get(newPath);
 
         if (Files.exists(pathRef) && Files.isDirectory(pathRef)) {
-            this.path = newPath;
+            setPath(newPath);
         } else {
             System.out.println("Ce chemin: '" + newPath + "'' est introuvable");
         }
@@ -101,7 +108,7 @@ class LsCommand extends Command {
     @Override
     public void execute() {
 
-        File directory = new File(path);
+        File directory = new File(getPath());
 
         if (!directory.isDirectory()) {
             System.out.println("Le chemin spécifié n'est pas un dossier.");
@@ -140,7 +147,26 @@ class CutCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("cut");
+        File directory = new File(getPath());
+
+        if (this.ner == -1) {
+            System.err.println("Error : entrer un ner");
+            return;
+        }
+
+        File[] directoryChildrens = directory.listFiles();
+
+        if (directoryChildrens != null) {
+            for (File file: directoryChildrens) {
+                if (file.isFile() /* + get ner à ajouter */) {
+                    file.delete();
+                    System.err.println("Element delete");
+                    return;
+                } else {
+                    System.err.println("Error : not a file");
+                }
+            }
+        }
     }
 }
 
@@ -177,7 +203,7 @@ class FindCommand extends Command {
     @Override
     public void execute() {
         if (args != null) {
-            Directory currentDirectory = new Directory(path, 0, null);
+            Directory currentDirectory = new Directory(getPath(), 0, null);
             currentDirectory.findRecursive(args);
         } else {
             System.out.println("Aide : find <nom_fichier>");

@@ -1,10 +1,12 @@
 package fr.uvsq.cprog;
+
 import org.fusesource.jansi.AnsiConsole;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ public class CommandLine {
         addCommand(new ExitCommand());
         addCommand(new LsCommand());
         addCommand(new FindCommand());
+        addCommand(new PastCommand());
     }
 
     private void addCommand(final Command command) {
@@ -40,14 +43,14 @@ public class CommandLine {
         Command command = null;
 
         String currentPath = System.getProperty("user.dir");
-        //String[] listFolders = currentPath.split("/");
-        //String currentFolder = listFolders[listFolders.length - 1];
 
         long previousNer = -1;
 
         Terminal terminal = TerminalBuilder.builder().build();
-        LineReader lineReader = LineReaderBuilder.
-                                builder().terminal(terminal).build();
+        LineReader lineReader = LineReaderBuilder
+            .builder().terminal(terminal).build();
+
+        generateNotesFile(currentPath);
 
         while (true) {
             String userInput = lineReader.readLine("prompt> ");
@@ -69,7 +72,7 @@ public class CommandLine {
                 ? parsedLine[2]
                 : parsedLine[1]
                 : null;
-            String cmdPath = command != null ? command.path : currentPath;
+            String cmdPath = command != null ? command.getPath() : currentPath;
 
             command = commands.get(cmdName);
 
@@ -77,12 +80,30 @@ public class CommandLine {
                 command.ner = cmdNer;
                 command.name = cmdName;
                 command.args = cmdArgs;
-                command.path = cmdPath;
+                if (cmdPath != null) { 
+                    command.setPath(cmdPath);
+                    generateNotesFile(cmdPath);
+                }
                 command.execute();
             } else {
                 System.out.println(cmdName + " command not found");
             }
         }
+    }
+
+    public void generateNotesFile(String path) {
+        File directory = new File(path);
+        File[] directoryChildrens = directory.listFiles();
+
+        for (File file : directoryChildrens) {
+            if (file.getName() == "notes.json") {
+                return;
+            }
+        }
+        
+        System.out.println("create file notes at "+ path +"...");
+        Notes notes = new Notes(directoryChildrens);
+        notes.createFile(path);
     }
     /**
      * Checks if the given string can be parsed as an integer.
