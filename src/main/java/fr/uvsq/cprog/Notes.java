@@ -20,7 +20,7 @@ public class Notes {
         List<Note> notes = new ArrayList<>();
         int ner = 0;
 
-        for(File file: fileList) {
+        for (File file: fileList) {
             notes.add(new Note(file.getName(), ner, ""));
             ner = ner + 1;
         }

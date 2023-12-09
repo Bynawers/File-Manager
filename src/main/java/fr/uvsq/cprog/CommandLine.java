@@ -81,7 +81,7 @@ public class CommandLine {
                 command.ner = cmdNer;
                 command.name = cmdName;
                 command.args = cmdArgs;
-                if (cmdPath != null) { 
+                if (cmdPath != null) {
                     command.setPath(cmdPath);
                     generateNotesFile(cmdPath);
                 }
@@ -102,7 +102,7 @@ public class CommandLine {
             }
         }
         
-        System.out.println("create file notes at "+ path +"...");
+        System.out.println("create file notes at " + path + "...");
         Notes notes = new Notes(directoryChildrens);
         notes.createFile(path);
     }

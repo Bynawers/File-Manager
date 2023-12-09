@@ -212,16 +212,16 @@ class VisuCommand extends Command {
                     }
                     reader.close();
                     System.out.println(content.toString());
-                }catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-            }else{
+            } else {
                 System.out.println("Le fichier n'est pas un texte");
                 long fileSize = file.length();
-                System.out.println("La taille du fichier est de : " + fileSize);
+                System.out.println("La taille du fichier est de : " + fileSize + " Ko");
             }
-        }else{
+        } else {
             System.out.println("Le fichier n'existe pas");
         }
     }
