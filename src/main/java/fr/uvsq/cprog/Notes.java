@@ -20,8 +20,8 @@ public class Notes {
         List<Note> notes = new ArrayList<>();
         int ner = 0;
 
-        for (File file: fileList) {
-            notes.add(new Note(file.getName(), ner, ""));
+        for(File file: fileList) {
+            notes.add(new Note(file.getName(), ""));
             ner = ner + 1;
         }
         return notes;
@@ -41,12 +41,10 @@ public class Notes {
 
 class Note {
     private String name;
-    private int ner;
     private String annotation;
 
-    public Note(String nameTmp, int nerTmp, String annotationTmp) {
+    public Note(String nameTmp, String annotationTmp) {
         this.name = nameTmp;
-        this.ner = nerTmp;
         this.annotation = annotationTmp;
     }
 
@@ -56,16 +54,10 @@ class Note {
     public String getName() {
         return name;
     }
-    public int getNer() {
-        return ner;
-    }
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
     }
     public void setName(String name) {
         this.name = name;
-    }
-    public void setNer(int ner) {
-        this.ner = ner;
     }
 }

@@ -1,121 +1,88 @@
 package fr.uvsq.cprog;
 
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 public class Directory extends ElementRepertory {
-
-    /**
-    * List of child elements in the directory.
-    */
-    private List<ElementRepertory> children;
 
     /**
      * Constructs a new Directory with the specified attributes.
      *
      * @param nameTmp The name of the directory.
-     * @param childrenTmp The list of child elements in the directory.
      * @param nerTmp The number of the directory.
-     * @param annotationTmp The annotation of the directory.
-     * @param parentTmp The parent of the directory.
      */
-    public Directory(
-        final String nameTmp,
-        final List<ElementRepertory> childrenTmp,
-        final int nerTmp,
-        final String annotationTmp,
-        final Directory parentTmp
-    ) {
-        super(nameTmp, nerTmp, annotationTmp, parentTmp);
-        this.children = childrenTmp;
-    }
-    /**
-     * Minimal constructor for a new Directory with the specified attributes.
-     * @param nameTmp The name of the directory.
-     * @param nerTmp The number of the directory.
-     * @param parentTmp The parent of the directory.
-     */
-    public Directory(
-        final String nameTmp,
-        final int nerTmp,
-        final Directory parentTmp
-    ) {
-        super(nameTmp, nerTmp, parentTmp);
-        List<ElementRepertory> list = new ArrayList<>();
-        this.children = list;
+    public Directory(final String nameTmp, final int nerTmp, final String pathTmp) {
+        super(nameTmp, nerTmp, pathTmp);
     }
 
-    /**
-     * Indicates if the element is a file.
-     *
-     * @return true if the element is a file, false otherwise.
-     */
-    @Override
-    public boolean isFile() {
+    public boolean isDirectory() {
         return true;
     }
-    /**
-     * Indicates if the element is a directory.
-     *
-     * @return false since this is a file.
-     */
-    @Override
-    public boolean isDirectory() {
+    public boolean isFile() {
         return false;
     }
 
-    /**
-     * Returns the children elements of the directory.
-     *
-     * @return List of ElementDirectory representing
-     *     the children of the directory.
-     */
-    public List<ElementRepertory> getChildren() {
-        return this.children;
-    }
-    /**
-     * Sets the children elements of the directory.
-     *
-     * @param newChildrens The new list of children elements.
-     */
-    public void setChildren(final List<ElementRepertory> newChildrens) {
-        this.children = newChildrens;
-    }
-
-    /**
-     * Browse all folders in the current folder and list all files.
-     */
-    @Override
-    public void listContent() {
-        if (this.children == null) {
-            return;
-        }
-        System.out.println("(Dossier) " + this.getName() + " :");
-        for (ElementRepertory element : children) {
-            element.listContent();
-        }
-    }
-
-    /**
-     * Find a specific file from its name.
-     *
-     * @param name The name of the file to find.
-     */
-    public void find(final String name) {
-        if (this.children == null) {
-            return;
-        }
-        for (ElementRepertory element : children) {
-            if (element.getName() == name) {
-                element.listContent();
-            }
+    public void displayElementsRepertory(Map<String, ElementRepertory> currentRepertoryElements) {
+        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+            ElementRepertory element = entry.getValue();
             if (element.isDirectory()) {
-                element.listContent();
+                System.out.print("[" + element.getNer() + "] ");
+                AnsiConsole.out()
+                    .println(Ansi.ansi()
+                    .fg(Ansi.Color.BLUE)
+                    .a(element.getName())
+                    .reset());
+            } else {
+                System.out.println("[" + element.getNer() + "] " + element.getName());
             }
         }
     }
+
+    public void createDirectory(String path) {
+        try {
+            String newPath = path + "/" + this.getName();
+            Path pathRef = Paths.get(newPath);
+            System.out.println(pathRef);
+            Files.createDirectory(pathRef);
+        } catch (FileAlreadyExistsException e) {
+            System.out.println("Erreur : Le dossier '"
+                + this.getName() + "' existe déjà");
+            return;
+        } catch (IOException e) {
+            System.out.println("Erreur : Impossible de creer le dossier.");
+            e.printStackTrace();
+            return;
+        }
+    }
+    public String lastDirectory(String path) {
+        String[] splitPath = path.split("/");
+        return splitPath[splitPath.length - 1];
+    }
+
+    public String goBack(String paths) {
+        String[] splitPath = paths.split("/");
+        System.out.println("go back");
+        String newPath = "";
+
+        int i = 0;
+        for(String folder: splitPath) {
+            if (i >= splitPath.length - 1) {
+                return "/" + newPath;
+            }
+            newPath = newPath == "" ? folder : newPath + "/" + folder;
+            i++;
+        }
+        return "";
+    }
+
+
     /**
      * Find a specific file from its name recursively.
      *
@@ -144,42 +111,4 @@ public class Directory extends ElementRepertory {
         }
     }
 
-
-
-    /**
-     * Calculate directory size from his content.
-     * @return the size of the directory.
-     */
-    @Override
-    public long getSize() {
-        int directorySize = 0;
-
-        if (this.children == null) {
-            return 0;
-        }
-
-        for (ElementRepertory element : children) {
-            directorySize += element.getSize();
-        }
-        return directorySize;
-    }
-
-    /**
-     * Delete a child of the current directory
-     * based on the NER (Number of Element Repertory).
-     * @param ner The NER (Number of Element Repertory)
-     * of the child to be deleted.
-     */
-    public void deleteChildren(final long ner) {
-        if (this.children == null) {
-            return;
-        }
-        Iterator<ElementRepertory> iterator = children.iterator();
-        while (iterator.hasNext()) {
-            ElementRepertory element = iterator.next();
-            if (element.getNer() == ner) {
-                iterator.remove();
-            }
-        }
-    }
 }

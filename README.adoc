@@ -56,7 +56,7 @@ Le projet devra donc les respecter.
        ** 3 + "ceci est un texte" ; le texte est ajouté ou concaténé au texte existant sur l'ER
        ** 3 -  ; retire tout le texte associé à l'ER 3
 
- 
+
 
 == Description de l'application à réaliser
 
