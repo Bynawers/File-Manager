@@ -63,6 +63,41 @@ public abstract class ElementRepertory {
         return ner;
     }
 
+    public String getNameCopy() {
+        String[] splitName = this.getName().split("\\.");
+        if (splitName.length > 2) {
+            return name;
+        }
+        String nameElement = splitName[0];
+        String extensionElement = splitName[1];
+        return nameElement + "_copie." + extensionElement;
+    }
+
+    public String lastName(String path) {
+        String[] splitPath = path.split("/");
+        return splitPath[splitPath.length - 1];
+    }
+
+    public String parentPath(String paths) {
+        String[] splitPath = paths.split("/");
+        String newPath = "";
+
+        int i = 0;
+        for(String folder: splitPath) {
+            if (i >= splitPath.length - 1) {
+                return "/" + newPath;
+            }
+            newPath = newPath == "" ? folder : newPath + "/" + folder;
+            i++;
+        }
+        return "";
+    }
+
+    public ElementRepertory getSelf() {
+        return this;
+    }
+
     abstract public boolean isDirectory();
     abstract public boolean isFile();
+
 }

@@ -30,6 +30,8 @@ public class CommandLine {
         addCommand(new CopyCommand());
         addCommand(new PastCommand());
         addCommand(new VisuCommand());
+        addCommand(new AnnotateCommand());
+        addCommand(new DesannotateCommand());
     }
 
     private void addCommand(final Command command) {
@@ -84,6 +86,8 @@ public class CommandLine {
                 : parsedLine[1]
                 : parsedLine[1]
                 : null;
+            ElementRepertory copy = command != null ? command.copy : null;
+            Notes notes = command != null ? command.notes : null;
 
             command = commands.get(cmdName);
 
@@ -92,17 +96,19 @@ public class CommandLine {
                 command.ner = cmdNer;
                 command.name = cmdName;
                 command.args = cmdArgs;
+                command.copy = copy;
+                command.notes = notes;
                 if (cmdPath != null) {
                     command.setPath(cmdPath);
                 }
                 command.currentRepertoryElements = currentRepertoryElements;
                 command.execute();
                 if (cmdName.equals("cd") || cmdName.equals("mkdir") || cmdName.equals("cut") || cmdName.equals("past")) {
-                    generateNotesFile(command.getPath());
+                    command.notes = generateNotesFile(command.getPath());
                     generateInstancesRepertory(command.getPath());
                 }
             } else {
-                System.out.println(cmdName + " command not found");
+                // command not found
             }
         }
     }
@@ -121,29 +127,34 @@ public class CommandLine {
         AnsiConsole.out()
             .print(Ansi.ansi()
             .fg(Ansi.Color.GREEN)
-            .a("[" + currentDirectory.lastDirectory(path) + "]$ ")
+            .a("[" + currentDirectory.lastName(path) + "]$ ")
             .reset());
 
         // TODO annotation du répertoire courant
     }
 
     // TODO si notes.json existe juste modifier
-    public void generateNotesFile(String path) {
+    public Notes generateNotesFile(String path) {
         File directory = new File(path);
         File[] directoryChildrens = directory.listFiles();
 
+        Notes notes = new Notes(directoryChildrens, path + "/notes.json");
+
         if (directoryChildrens == null) {
-            // Exception
-            return;
+            // Exception pas d'enfants
+            return null;
         }
 
         for (File file : directoryChildrens) {
-            if (file.getName() == "notes.json") {
-                return;
+            if (file.getName().equals("notes.json")) {
+                notes.readNote();
+                notes.createFile();
+                return notes;
             }
         }
-        Notes notes = new Notes(directoryChildrens);
-        notes.createFile(path);
+        notes = new Notes(directoryChildrens, path + "/notes.json");
+        notes.createFile();
+        return notes;
     }
 
     public void generateInstancesRepertory(String path) {

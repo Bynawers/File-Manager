@@ -1,6 +1,8 @@
 package fr.uvsq.cprog;
 
+import java.io.IOException;
 import java.nio.file.Files;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -15,7 +17,10 @@ abstract class Command {
     /** The arguments of the command. */
     String args;
     /** The path of the command. */
-     String path;
+    String path;
+
+    ElementRepertory copy;
+    Notes notes;
 
     abstract String getName();
     abstract void execute();
@@ -38,7 +43,6 @@ class CreateDirectoryCommand extends Command {
     @Override
     public void execute() {
         if (args == null) {
-            System.out.println("Veuillez entrer le nom du dossier");
             return;
         }
         Directory newDirectory = new Directory(args, 0, "");
@@ -76,7 +80,7 @@ class CdCommand extends Command {
         }
         else {
             Directory currentDirectory = new Directory(getPath(), 0, "");
-            newPath = currentDirectory.goBack(getPath());
+            newPath = currentDirectory.parentPath(getPath());
         }
 
         Path pathRef = Paths.get(getPath() + "/" + args);
@@ -84,7 +88,7 @@ class CdCommand extends Command {
         if (Files.exists(pathRef) && Files.isDirectory(pathRef)) {
             setPath(newPath);
         } else {
-            System.out.println("Ce chemin: " + newPath + " est introuvable");
+            // chemin introuvable
         }
     }
 }
@@ -100,7 +104,7 @@ class LsCommand extends Command {
         Directory directory = new Directory("root", 0, "");
 
         if (!directory.isDirectory()) {
-            System.out.println("Le chemin spécifié n'est pas un dossier.");
+            // pas un dossier
             return;
         }
         directory.displayElementsRepertory(currentRepertoryElements);
@@ -117,7 +121,7 @@ class CutCommand extends Command {
     @Override
     public void execute() {
         if (this.ner == -1) {
-            System.err.println("Error : entrer un ner");
+            // entrer un ner
             return;
         }
 
@@ -125,7 +129,7 @@ class CutCommand extends Command {
         file.delete(currentRepertoryElements, ner);
     }
 }
-//TODO create a function to copy
+// TODO ajouter copy folder
 class CopyCommand extends Command {
     @Override
     public String getName() {
@@ -134,25 +138,18 @@ class CopyCommand extends Command {
 
     @Override
     public void execute() {
-        if (args == null) {
-            System.err.println("Error : entrer le nom du fichier");
+        if (this.ner == -1) {
+            // entrer un ner
             return;
         }
-        
-        if (!currentRepertoryElements.containsKey(args) || !currentRepertoryElements.get(args).isFile() ) {
-            System.err.println("Error : le fichier n'existe pas");
-            return;
+
+        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+            ElementRepertory element = entry.getValue();
+            if (element.getNer() == this.ner && element.isFile()) {
+                this.copy = element.getSelf();
+                return;
+            }
         }
-        ElementRepertory fileToCopy = currentRepertoryElements.get(args);
-        
-        if (fileToCopy == null || !fileToCopy.isFile()) {
-            System.err.println("Error : le fichier n'existe pas");
-            return;
-        }
-        ElementRepertory newFile = new FileRef(fileToCopy.getName() + "-copy", fileToCopy.getNer(), fileToCopy.getPath());
-        //dans tt les cas on rajoute "-copy" et on enleve si le fichier n'existe pas?
-        currentRepertoryElements.put(newFile.getName(), newFile); // on le rajoute a la map, mais ca ecrase l'ancien
-        System.out.println("Le fichier " + args + " a été copié avec succès.");
     }
 }
 
@@ -164,7 +161,24 @@ class PastCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("past");
+        if (this.copy == null) {
+            return;
+        }
+        String copyPath = copy.parentPath(copy.getPath()) + "/" + copy.getNameCopy();
+        Path sourcePath = Paths.get(copy.getPath());
+        Path targetPath = Paths.get(copyPath);
+
+        boolean existingFile = new File(copyPath).exists();
+
+        if (existingFile) {
+            return;
+        }
+
+        try {
+            Files.copy(sourcePath, targetPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -193,11 +207,47 @@ class FindCommand extends Command {
 
     @Override
     public void execute() {
-        if (args != null) {
-            Directory currentDirectory = new Directory("root", 0, path);
-            currentDirectory.findRecursive(args,path);
-        } else {
-            System.out.println("Aide : find <nom_fichier>");
+        if (args == null) {
+            return;
         }
+        Directory currentDirectory = new Directory("root", 0, path);
+        currentDirectory.findRecursive(args,path);
+    }
+}
+
+class AnnotateCommand extends Command {
+    @Override
+    public String getName() {
+        return "+";
+    }
+
+    @Override
+    public void execute() {
+        if (ner == -1 || args == null || notes == null) {
+            return;
+        }
+        Directory parentDirectory = new Directory("annotate", -1, null);
+        ElementRepertory element = parentDirectory.getElementByNer(currentRepertoryElements, ner);
+        String name = element.getName();
+        notes.addAnnotation(args, name);
+    }
+}
+
+class DesannotateCommand extends Command {
+    @Override
+    public String getName() {
+        return "-";
+    }
+
+    @Override
+    public void execute() {
+        if (ner == -1 || notes == null) {
+            return;
+        }
+        Directory parentDirectory = new Directory("desannotate", -1, null);
+        ElementRepertory element = parentDirectory.getElementByNer(currentRepertoryElements, ner);
+        String name = element.getName();
+        notes.deleteAnnotation(name);
+        
     }
 }

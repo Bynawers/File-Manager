@@ -40,7 +40,6 @@ public class FileRef extends ElementRepertory {
                 }
             }
         }
-        
     }
 
     public void visualization(String path) {
@@ -64,12 +63,12 @@ public class FileRef extends ElementRepertory {
                 }
 
             } else{
-                System.out.println("Le fichier n'est pas un texte");
+                // fichier n'est pas un texte
                 long fileSize = file.length();
                 System.out.println("La taille du fichier est de : " + fileSize + " Ko");
             }
         } else {
-            System.out.println("Le fichier n'existe pas");
+            // fichier n'existe pas 
         }
     }
 }

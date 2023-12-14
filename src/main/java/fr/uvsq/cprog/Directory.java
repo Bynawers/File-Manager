@@ -61,25 +61,15 @@ public class Directory extends ElementRepertory {
             return;
         }
     }
-    public String lastDirectory(String path) {
-        String[] splitPath = path.split("/");
-        return splitPath[splitPath.length - 1];
-    }
 
-    public String goBack(String paths) {
-        String[] splitPath = paths.split("/");
-        System.out.println("go back");
-        String newPath = "";
-
-        int i = 0;
-        for(String folder: splitPath) {
-            if (i >= splitPath.length - 1) {
-                return "/" + newPath;
+    public ElementRepertory getElementByNer(Map<String, ElementRepertory> currentRepertoryElements, int nerTmp) {
+        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+            ElementRepertory element = entry.getValue();
+            if (element.getNer() == nerTmp) {
+                return element;
             }
-            newPath = newPath == "" ? folder : newPath + "/" + folder;
-            i++;
         }
-        return "";
+        return null;
     }
 
 
@@ -110,5 +100,4 @@ public class Directory extends ElementRepertory {
             }
         }
     }
-
 }
