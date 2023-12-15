@@ -16,6 +16,10 @@ public class Notes {
     private List<Note> notes = new ArrayList<>();
     private String path;
 
+    public Notes(List<Note> notes, String path) { //on laisse?
+        this.notes = notes;
+        this.path = path;
+    }
     public String getPath() {
         return path;
     }
@@ -27,8 +31,11 @@ public class Notes {
         this.notes = setNotes(fileList);
         path = pathTmp;
     }
+    public List<Note> getNotes() {
+        return notes;
+    }
 
-    private List<Note> setNotes(File[] fileList) {
+    public List<Note> setNotes(File[] fileList) {
         List<Note> notes = new ArrayList<>();
         int ner = 0;
 
