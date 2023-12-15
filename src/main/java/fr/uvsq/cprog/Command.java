@@ -26,6 +26,13 @@ abstract class Command {
     public String getPath() {
         return path;
     }
+    public void setArgs(String args) {
+        this.args = args;
+    }
+
+    public String getArgs() {
+        return args;
+    }
 }
 
 

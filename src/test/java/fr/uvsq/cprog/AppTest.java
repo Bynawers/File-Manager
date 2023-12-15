@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class AppTest
     
             file.delete();
         } catch (IOException e) {
-            fail("Erreur avec le paths ou la méthode visualization");
+            fail("Erreur avec le paths ou la fonction visualization");
         }
     }
 
@@ -104,31 +105,87 @@ public class AppTest
         public void testExecute() {
             LsCommand lsCommand = new LsCommand();
     
-            // Mocking the currentRepertoryElements map
+
             Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
             currentRepertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "/Users/charbeltouma/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog/file1.txt"));
             currentRepertoryElements.put("file2.txt", new FileRef("file2.txt", 1, "/Users/charbeltouma/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog/file2.txt"));
             //currentRepertoryElements.put("dir1", new Directory("dir1", 2, "/Users/charbeltouma/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog/")); // TODO pourquoi le dir ne s'affiche pas
 
-            // Redirecting System.out to capture the output
+
             ByteArrayOutputStream outContent = new ByteArrayOutputStream();
             PrintStream originalOut = System.out;
             System.setOut(new PrintStream(outContent));
     
-            // Setting the currentRepertoryElements map in the lsCommand object
+
             lsCommand.currentRepertoryElements = currentRepertoryElements;
-    
-            // Executing the lsCommand
+            
+            String name = lsCommand.getName();
             lsCommand.execute();
-    
-            // Asserting the expected output
+
             //String expectedOutput = "file1.txt\nfile2.txt\ndir1\n";
             String expectedOutput = "[0] file1.txt\n[1] file2.txt\n";
             assertEquals(expectedOutput, outContent.toString());
-    
-            // Restoring the original System.out
+            assertEquals(name, "ls");
+
             System.setOut(originalOut);
         }
+
+        @Test
+        public void testGetName() {
+            ExitCommand command = new ExitCommand();
+            assertEquals("exit", command.getName());
+        }
+
+        @Test // Class visuCommand
+        public void testExecuteVisualizesFile() throws Exception {
+            String content = "Bonjour ceci est un test !\n";
+            String fileName = "file.txt";
+            String filePath = System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22/" + fileName;
+            File file = new File(filePath);
+        
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(content);
+            }
+        
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(outputStream));
+        
+            VisuCommand visuCommand = new VisuCommand();
+            visuCommand.setPath(System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22");
+            visuCommand.setArgs(fileName);
+            String name = visuCommand.getName(); 
+            visuCommand.execute();
+        
+            String expectedOutput = content + System.lineSeparator();
+            assertEquals(expectedOutput, outputStream.toString());
+            assertEquals(name, "visu");
+            file.delete();
+        }
+
+        @Test
+        public void testExecuteFindsFile() throws IOException {
+            File tempDir = new File(System.getProperty("java.io.tmpdir"), "testDir");
+            tempDir.mkdir();
+            
+            File tempFile = new File(tempDir, "testFile.txt");
+            tempFile.createNewFile();
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(outputStream));
+
+
+            FindCommand findCommand = new FindCommand();
+            String path = tempDir.getPath();
+            findCommand.setPath(path);
+            findCommand.setArgs("testFile.txt");
+            findCommand.execute();
+
+            String expectedOutput = "Le fichier testFile.txt a été trouvé dans le dossier " + path + "\n";
+            assertEquals(expectedOutput, outputStream.toString());
+            tempFile.delete();
+            tempDir.delete();
+        }
+        
 } 
 
 
