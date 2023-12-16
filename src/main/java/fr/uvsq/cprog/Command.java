@@ -227,7 +227,7 @@ class AnnotateCommand extends Command {
     public String getName() {
         return "+";
     }
-
+    
     @Override
     public void execute() {
         if (ner == -1 || args == null || notes == null) {
