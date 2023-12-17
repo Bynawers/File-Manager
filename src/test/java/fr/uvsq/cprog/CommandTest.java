@@ -65,12 +65,10 @@ public class CommandTest {
 
     @Test // Class visuCommand
     public void testExecuteVisualizesFile() throws Exception {
-        String content = "Bonjour ceci est un test !\n";
-        String fileName = "file.txt";
-        String filePath = System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22/" + fileName;
-        File file = new File(filePath);
+        String content = "Bonjour ceci est un test !";
+        File tempFile = File.createTempFile("testFile", ".txt");
     
-        try (FileWriter writer = new FileWriter(file)) {
+        try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write(content);
         }
     
@@ -78,13 +76,16 @@ public class CommandTest {
         System.setOut(new PrintStream(outputStream));
     
         VisuCommand visuCommand = new VisuCommand();
-        visuCommand.setPath(System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22");
-        visuCommand.setArgs(fileName);
+        visuCommand.currentRepertoryElements = new HashMap<>();
+        FileRef file = new FileRef(tempFile.getName(), 1, tempFile.getAbsolutePath());
+        visuCommand.currentRepertoryElements.put(tempFile.getName(), file);
+        visuCommand.ner = 1;
+
         String name = visuCommand.getName(); 
         visuCommand.execute();
     
-        String expectedOutput = content + System.lineSeparator();
-        assertEquals(expectedOutput, outputStream.toString());
+        String expectedOutput = content;
+        assertEquals(expectedOutput, outputStream.toString().trim());
         assertEquals(name, "visu");
         file.delete();
     }
@@ -180,58 +181,52 @@ public class CommandTest {
         Files.deleteIfExists(tempDir);
     }
     
-    /* TODO new Notes prends en argument un tableau de File[]
+    // TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testAnnotateCommand() {
         AnnotateCommand command = new AnnotateCommand();
         command.currentRepertoryElements = new HashMap<>();
-    
-        List<Note> listNote = new ArrayList<>();
-        listNote.add(new Note("file1.txt", ""));
-        Notes notes = new Notes(listNote, "/path");
+        File[] fileTab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
+
+        Notes notes = new Notes(fileTab, "/path");
     
         command.currentRepertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "/path/file1.txt"));
-    
+        command.currentRepertoryElements.put("file2.txt", new FileRef("file2.txt", 0, "/path/file2.txt"));
+
         command.notes = notes;
-        command.ner = 0; 
+        command.ner = 0;
         command.setArgs("Annotation pour file1.txt");
         command.execute();
+
         assertEquals(command.getArgs(), "Annotation pour file1.txt");
         String annotation = notes.getNotes().get(0).getAnnotation();
         assertEquals(command.getName(), "+");
         assertEquals("Annotation pour file1.txt", annotation);
-    }*/
+    }
 
-    /* TODO new Notes prends en argument un tableau de File[]
+    // TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testDesannotateCommand() {
         DesannotateCommand command = new DesannotateCommand();
         command.currentRepertoryElements = new HashMap<>();
-        List<Note> initialNotes = new ArrayList<>();
+        File[] fileTab = new File[]{new File("file1.txt")};
 
-        initialNotes.add(new Note("file1.txt", "Annotation pour file1.txt"));
-        Notes notes = new Notes(initialNotes, "/path");
+
+        Notes notes = new Notes(fileTab, "/path");
+        notes.addAnnotation("Annotation pour file1.txt", "file1.txt");
 
 
         ElementRepertory element = new FileRef("file1.txt", 1, "/path/file1.txt");
         command.currentRepertoryElements.put("file1.txt", element);
-
         command.notes = notes;
         command.ner = 1;
 
         command.execute(); //on supprime l'annotation
 
-        Note annotatedNote = null;
-        for (Note note : notes.getNotes()) { //on cherche l'annotation dans la liste
-            if (note.getName().equals("file1.txt")) {
-                annotatedNote = note;
-                break;
-            }
-        }
-        assertNotNull(annotatedNote);
-        assertEquals("", annotatedNote.getAnnotation());
+        String annotation = notes.getAnnotation("file1.txt");
+        assertEquals("", annotation);
         assertEquals(command.getName(), "-");
-    }*/
+    }
 
     @Test
     public void testCutCommand() throws IOException {

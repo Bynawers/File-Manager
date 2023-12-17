@@ -1,0 +1,70 @@
+[
+  {
+    "name": "file.txt",
+    "annotation": ""
+  },
+  {
+    "name": "checkstyle",
+    "annotation": ""
+  },
+  {
+    "name": ".DS_Store",
+    "annotation": ""
+  },
+  {
+    "name": "google_style.xml",
+    "annotation": ""
+  },
+  {
+    "name": "mvnw.cmd",
+    "annotation": ""
+  },
+  {
+    "name": "target",
+    "annotation": ""
+  },
+  {
+    "name": "path",
+    "annotation": ""
+  },
+  {
+    "name": "testt",
+    "annotation": ""
+  },
+  {
+    "name": "pom.xml",
+    "annotation": ""
+  },
+  {
+    "name": "README.adoc",
+    "annotation": ""
+  },
+  {
+    "name": "notes.json",
+    "annotation": ""
+  },
+  {
+    "name": ".gitignore",
+    "annotation": ""
+  },
+  {
+    "name": ".mvn",
+    "annotation": ""
+  },
+  {
+    "name": ".git",
+    "annotation": ""
+  },
+  {
+    "name": ".vscode",
+    "annotation": ""
+  },
+  {
+    "name": "mvnw",
+    "annotation": ""
+  },
+  {
+    "name": "src",
+    "annotation": ""
+  }
+]

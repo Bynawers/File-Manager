@@ -136,7 +136,7 @@ public class CommandLine {
      * en les affectant dans les bonnes variables.
      * @param parsedLine Le tableau d'entrée de l'utilisateur.
      */
-    private void parseUser(String[] parsedLine) {
+    public void parseUser(String[] parsedLine) {
         currentNer = parsedLine.length > 0
             ? isInteger(parsedLine[0])
             ? Integer.parseInt(parsedLine[0])
@@ -163,7 +163,7 @@ public class CommandLine {
      * @param command L'instance Command de la commande executé.
      * @return La nouvelle instance Notes modifées.
      */
-    private Notes modifyNotes(Notes currentNotes, Command command) {
+    public Notes modifyNotes(Notes currentNotes, Command command) {
         String cmdName = command.getName();
         String nameFile = "";
 
@@ -325,4 +325,13 @@ public class CommandLine {
     public boolean containsCommand(String commandName) {
         return commands.containsKey(commandName);
     }
+
+    public String getCurrentName() {
+        return currentName;
+    }
+
+    public String getCurrentArgs() {
+        return currentArgs;
+    }
+
 }
