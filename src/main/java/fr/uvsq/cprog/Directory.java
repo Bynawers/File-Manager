@@ -45,6 +45,7 @@ public class Directory extends ElementRepertory {
      */
     @Override
     public void delete() {
+        System.out.println("delete");
     }
 
     /**

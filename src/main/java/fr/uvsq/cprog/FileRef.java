@@ -8,6 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.text.html.ImageView;
+
 public class FileRef extends ElementRepertory {
 
     /**
@@ -74,7 +79,17 @@ public class FileRef extends ElementRepertory {
                     e.printStackTrace();
                 }
 
-            } else{
+            } if (fileName.endsWith(".jpg") || fileName.endsWith(".png")) {
+                JFrame frame = new JFrame("Image Viewer");
+                ImageIcon imageIcon = new ImageIcon(path);
+                JLabel label = new JLabel(imageIcon);
+                frame.getContentPane().add(label);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+            else{
                 // fichier n'est pas un .txt
                 long fileSize = file.length();
                 System.out.println("La taille du fichier est de : " + fileSize + " Ko");

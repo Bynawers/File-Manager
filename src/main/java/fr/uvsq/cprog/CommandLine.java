@@ -53,6 +53,7 @@ public class CommandLine {
         addCommand(new VisuCommand());
         addCommand(new AnnotateCommand());
         addCommand(new DesannotateCommand());
+        addCommand(new HelpCommand());
     }
 
     /**
@@ -88,7 +89,7 @@ public class CommandLine {
 
         currentNotes = generateNotesFile(currentPath);
         generateInstancesRepertory(currentPath);
-        currentAnnotation = getCurrentPathAnnotation();
+        currentAnnotation = "";
 
         while (true) {
             if (command != null) {
@@ -123,11 +124,14 @@ public class CommandLine {
                 currentNotes = modifyNotes(currentNotes, command);
 
                 generateInstancesRepertory(command.getPath());
+
                 currentPath = command.getPath();
-                currentAnnotation = getCurrentPathAnnotation();
             } else {
                 // command not found
             }
+
+            ElementRepertory currentFile = getElementByNer(currentNer);
+            currentAnnotation = currentFile != null ? currentNotes.getAnnotation(currentFile.getName()) : "";
         }
     }
 
@@ -279,32 +283,21 @@ public class CommandLine {
             ner++;
         }
     }
-
-    /**
-     * Récupère l'annotation du dossier courant à partir du fichier notes.json du dossier parent.
-     * @return L'annotation du dossier courant.
+    
+    /** 
+     * Obtiens l'instance d'un élément à partir de son Ner. 
+     * @return L'élément associé au Ner de la commande.
      */
-    public String getCurrentPathAnnotation() {
-
-        Directory utility = new Directory("utility", 0, "");
-        String parentPath = utility.parentPath(currentPath);
-        String ParentDirectory = utility.lastName(currentPath);
-
-        File directory = new File(parentPath);
-        File[] directoryChildrens = directory.listFiles();
-
-        Notes parentNotes = new Notes(directoryChildrens, parentPath + "/notes.json");
-        
-        for (File file : directoryChildrens) {
-            
-            if (file.getName().equals("notes.json")) {
-                parentNotes.readNote();
-                return parentNotes.getAnnotation(ParentDirectory);
+    public ElementRepertory getElementByNer(int ner) {
+        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+            ElementRepertory element = entry.getValue();
+            if (element.getNer() == ner) {
+                return element;
             }
         }
-        return "";
+        return null;
     }
-    
+
     /**
      * Checks if the given string can be parsed as an integer.
      *

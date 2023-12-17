@@ -341,3 +341,30 @@ class DesannotateCommand extends Command {
         notes.deleteAnnotation(name);
     }
 }
+
+/**
+ * Supprime l'annotation d'un fichier/dossier à partir de son Ner,
+ * à l'aide de la commande -.
+ */
+class HelpCommand extends Command {
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public void execute() {
+        String helpOutput = "Listes des commandes :\n" 
+        + "mkdir <nom_du_dossier>       créer un dossier\n"
+        + "<NER> cut                    effacer un fichier\n"
+        + "<NER> visu                   visualise un fichier\n"
+        + "find <nom_du_fichier>        trouve le chemin d'un fichier\n"
+        + "<NER> + <Annotation>         ajoute une annotation à un fichier\n"
+        + "<NER> -                      supprime l'annotation du fichier\n"
+        + "<NER> copy                   copie un fichier\n"
+        + "<NER> past                   créer un fichier à partir de la copie\n"
+        + "ls                           affiche les éléments du dossier courant\n"
+        + "cd <chemin>                  parcours le système de fichier";
+        System.out.println(helpOutput);
+    }
+}
