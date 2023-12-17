@@ -34,7 +34,7 @@ public class CommandLine {
         addCommand(new DesannotateCommand());
     }
 
-    private void addCommand(final Command command) {
+    public void addCommand(final Command command) {
         commands.put(command.getName(), command);
     }
     /**
@@ -203,5 +203,11 @@ public class CommandLine {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+    public Map<String, ElementRepertory> getCurrentRepertoryElements() {
+        return currentRepertoryElements;
+    }
+    public boolean containsCommand(String commandName) {
+        return commands.containsKey(commandName);
     }
 }

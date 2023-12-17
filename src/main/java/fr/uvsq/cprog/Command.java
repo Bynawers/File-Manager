@@ -136,6 +136,7 @@ class CutCommand extends Command {
         file.delete(currentRepertoryElements, ner);
     }
 }
+
 // TODO ajouter copy folder
 class CopyCommand extends Command {
     @Override

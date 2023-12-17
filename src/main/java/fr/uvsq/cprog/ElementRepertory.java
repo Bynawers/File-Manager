@@ -65,6 +65,10 @@ public abstract class ElementRepertory {
 
     public String getNameCopy() {
         String[] splitName = this.getName().split("\\.");
+        if (splitName.length == 1) {
+            String nameElement = splitName[0];
+            return nameElement + "_copie";
+        }
         if (splitName.length > 2) {
             return name;
         }
@@ -79,6 +83,9 @@ public abstract class ElementRepertory {
     }
 
     public String parentPath(String paths) {
+        if (paths.equals("")) { // on verifie si le path est vide
+            return "";
+        }
         String[] splitPath = paths.split("/");
         String newPath = "";
 
