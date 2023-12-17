@@ -1,7 +1,7 @@
 [
   {
     "name": ".git",
-    "annotation": ""
+    "annotation": "sqdfqsdfqsdfqsd"
   },
   {
     "name": ".vscode",
@@ -21,7 +21,7 @@
   },
   {
     "name": "test",
-    "annotation": ""
+    "annotation": "ROOT"
   },
   {
     "name": "mvnw",
@@ -49,6 +49,10 @@
   },
   {
     "name": "google_style.xml",
+    "annotation": ""
+  },
+  {
+    "name": "test.md",
     "annotation": ""
   },
   {

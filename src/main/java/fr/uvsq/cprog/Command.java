@@ -31,6 +31,16 @@ abstract class Command {
     public String getPath() {
         return path;
     }
+
+    public ElementRepertory getElementByNer() {
+        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+            ElementRepertory element = entry.getValue();
+            if (element.getNer() == ner) {
+                return element;
+            }
+        }
+        return null;
+    }
 }
 
 
@@ -121,12 +131,12 @@ class CutCommand extends Command {
     @Override
     public void execute() {
         if (this.ner == -1) {
-            // entrer un ner
             return;
         }
 
-        fr.uvsq.cprog.FileRef file = new fr.uvsq.cprog.FileRef("delete", 0, "");
-        file.delete(currentRepertoryElements, ner);
+        ElementRepertory element = getElementByNer();
+        copy = element;
+        element.delete();
     }
 }
 // TODO ajouter copy folder
@@ -190,12 +200,14 @@ class VisuCommand extends Command {
 
     @Override
     public void execute() {
-        if (args == null) {
+        if (ner == -1) {
             return;
         }
-        String filePath = getPath() + "/" + args;
+
+        ElementRepertory element = getElementByNer();
+
         FileRef file = new FileRef("visu", 0, "");
-        file.visualization(filePath);
+        file.visualization(element.getPath());
     }
 }
 
@@ -211,7 +223,7 @@ class FindCommand extends Command {
             return;
         }
         Directory currentDirectory = new Directory("root", 0, path);
-        currentDirectory.findRecursive(args,path);
+        currentDirectory.findRecursive(args, path);
     }
 }
 
@@ -226,8 +238,8 @@ class AnnotateCommand extends Command {
         if (ner == -1 || args == null || notes == null) {
             return;
         }
-        Directory parentDirectory = new Directory("annotate", -1, null);
-        ElementRepertory element = parentDirectory.getElementByNer(currentRepertoryElements, ner);
+
+        ElementRepertory element = getElementByNer();
         String name = element.getName();
         notes.addAnnotation(args, name);
     }
@@ -244,10 +256,8 @@ class DesannotateCommand extends Command {
         if (ner == -1 || notes == null) {
             return;
         }
-        Directory parentDirectory = new Directory("desannotate", -1, null);
-        ElementRepertory element = parentDirectory.getElementByNer(currentRepertoryElements, ner);
+        ElementRepertory element = getElementByNer();
         String name = element.getName();
         notes.deleteAnnotation(name);
-        
     }
 }

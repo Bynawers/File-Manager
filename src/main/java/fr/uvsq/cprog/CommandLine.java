@@ -17,6 +17,16 @@ public class CommandLine {
     private final Map<String, Command> commands = new HashMap<>();
     private Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
 
+    private static Command command;
+    private static String currentPath;
+    private static String currentName;
+    private static String currentArgs;
+    private static String currentAnnotation;
+    private static ElementRepertory currentCopy;
+    private static Notes currentNotes;
+    private static int currentNer;
+
+
     /**
      * List of all commands.
      */
@@ -37,6 +47,7 @@ public class CommandLine {
     private void addCommand(final Command command) {
         commands.put(command.getName(), command);
     }
+
     /**
      * Starts the command line interface.
      * Override this method in a subclass to customize the behavior.
@@ -47,81 +58,123 @@ public class CommandLine {
 
         AnsiConsole.systemInstall();
 
-        Command command = null;
-
-        String currentPath = System.getProperty("user.dir");
-
-        int previousNer = -1;
-
         Terminal terminal = TerminalBuilder.builder().build();
         LineReader lineReader = LineReaderBuilder
             .builder().terminal(terminal).build();
 
-        generateNotesFile(currentPath);
+        command = null;
+        currentPath = System.getProperty("user.dir");
+        currentNer = -1;
+        currentNotes = null;
+        currentCopy = null;
+        currentName = null;
+        currentAnnotation = "";
+        currentArgs = "";
+
+        currentNotes = generateNotesFile(currentPath);
         generateInstancesRepertory(currentPath);
+        currentAnnotation = getCurrentPathAnnotation();
 
         while (true) {
+            if (command != null) {
+                currentPath = command.getPath();
+            }
 
-            String cmdPath = command != null ? command.getPath() : currentPath;
-
-            displayInterface(cmdPath);
+            displayInterface(currentPath);
             String userInput = lineReader.readLine("> ");
 
             String[] parsedLine = userInput.split("\\s+");
+            parseUser(parsedLine);
+            
+            if (command != null) {
+                currentCopy = command.copy;
+            }
 
-            int cmdNer = parsedLine.length > 0
-                ? isInteger(parsedLine[0])
-                ? Integer.parseInt(parsedLine[0])
-                : previousNer
-                : -1;
-            String cmdName = parsedLine.length > 0
-                ? isInteger(parsedLine[0])
-                ? parsedLine[1]
-                : parsedLine[0]
-                : null;
-            String cmdArgs = parsedLine.length > 1
-                ? isInteger(parsedLine[0])
-                ? cmdArgs = parsedLine.length > 2
-                ? parsedLine[2]
-                : parsedLine[1]
-                : parsedLine[1]
-                : null;
-            ElementRepertory copy = command != null ? command.copy : null;
-            Notes notes = command != null ? command.notes : null;
-
-            command = commands.get(cmdName);
+            command = currentName != null ? commands.get(currentName) : null;
 
             if (command != null) {
-                //System.out.println("COMMANDES \nner : "+cmdNer+"\nname : "+cmdName+"\nargs : "+cmdArgs+"\npath : "+cmdPath);
-                command.ner = cmdNer;
-                command.name = cmdName;
-                command.args = cmdArgs;
-                command.copy = copy;
-                command.notes = notes;
-                if (cmdPath != null) {
-                    command.setPath(cmdPath);
+                command.ner = currentNer;
+                command.name = currentName;
+                command.args = currentArgs;
+                command.copy = currentCopy;
+                command.notes = currentNotes;
+
+                if (currentPath != null) {
+                    command.setPath(currentPath);
                 }
                 command.currentRepertoryElements = currentRepertoryElements;
+
                 command.execute();
-                if (cmdName.equals("cd") || cmdName.equals("mkdir") || cmdName.equals("cut") || cmdName.equals("past")) {
-                    command.notes = generateNotesFile(command.getPath());
-                    generateInstancesRepertory(command.getPath());
-                }
+
+                currentNotes = modifyNotes(currentNotes, command);
+
+                generateInstancesRepertory(command.getPath());
+                currentPath = command.getPath();
+                currentAnnotation = getCurrentPathAnnotation();
             } else {
                 // command not found
             }
         }
     }
 
-    public void displayInterface(String path) {
+    private void parseUser(String[] parsedLine) {
+        currentNer = parsedLine.length > 0
+            ? isInteger(parsedLine[0])
+            ? Integer.parseInt(parsedLine[0])
+            : currentNer
+            : currentNer;
+        currentName = parsedLine.length > 0
+            ? isInteger(parsedLine[0]) && parsedLine.length > 1
+            ? parsedLine[1]
+            : parsedLine[0]
+            : null;
+        currentArgs = parsedLine.length > 1
+            ? isInteger(parsedLine[0])
+            ? parsedLine.length > 2
+            ? parsedLine[2]
+            : parsedLine[1]
+            : parsedLine[1]
+            : null;
+    }
+
+    private Notes modifyNotes(Notes currentNotes, Command command) {
+        String cmdName = command.name;
+        String nameFile = "";
+
+        if (cmdName.equals("mkdir")) {
+            nameFile = command.args;
+            currentNotes.addNote(nameFile);
+
+        } else if (cmdName.equals("past")) {
+            nameFile = command.copy.getNameCopy();
+            currentNotes.addNote(nameFile);
+
+        } else if (cmdName.equals("cut")) {
+            nameFile = command.copy.getName();
+            currentNotes.deleteNote(nameFile);
+        }
+        else if (cmdName.equals("cd")) {
+            currentNotes = generateNotesFile(command.getPath());
+        }
+        return currentNotes;
+    }
+
+    private void displayInterface(String path) {
 
         Directory currentDirectory = new Directory(path, 0, "");
 
         AnsiConsole.out()
-            .println(Ansi.ansi()
+            .print(Ansi.ansi()
             .fg(Ansi.Color.GREEN)
-            .a(path)
+            .a(path + " ")
             .reset());
+
+        AnsiConsole.out()
+            .println(Ansi.ansi()
+            .fg(Ansi.Color.YELLOW)
+            .a(currentAnnotation)
+            .reset());
+
         currentDirectory.displayElementsRepertory(currentRepertoryElements);
 
         AnsiConsole.out()
@@ -133,12 +186,11 @@ public class CommandLine {
         // TODO annotation du répertoire courant
     }
 
-    // TODO si notes.json existe juste modifier
-    public Notes generateNotesFile(String path) {
+    private Notes generateNotesFile(String path) {
         File directory = new File(path);
         File[] directoryChildrens = directory.listFiles();
 
-        Notes notes = new Notes(directoryChildrens, path + "/notes.json");
+        Notes notes = new Notes(null, path + "/notes.json");
 
         if (directoryChildrens == null) {
             // Exception pas d'enfants
@@ -148,16 +200,17 @@ public class CommandLine {
         for (File file : directoryChildrens) {
             if (file.getName().equals("notes.json")) {
                 notes.readNote();
-                notes.createFile();
+                //notes.writeFile();
+                notes.checkNotes(directoryChildrens);
                 return notes;
             }
         }
         notes = new Notes(directoryChildrens, path + "/notes.json");
-        notes.createFile();
+        notes.writeFile();
         return notes;
     }
 
-    public void generateInstancesRepertory(String path) {
+    private void generateInstancesRepertory(String path) {
         if (path == null) {
             return;
         }
@@ -189,6 +242,28 @@ public class CommandLine {
             ner++;
         }
     }
+
+    private String getCurrentPathAnnotation() {
+
+        Directory utility = new Directory("utility", 0, "");
+        String parentPath = utility.parentPath(currentPath);
+        String ParentDirectory = utility.lastName(currentPath);
+
+        File directory = new File(parentPath);
+        File[] directoryChildrens = directory.listFiles();
+
+        Notes parentNotes = new Notes(directoryChildrens, parentPath + "/notes.json");
+        
+        for (File file : directoryChildrens) {
+            
+            if (file.getName().equals("notes.json")) {
+                parentNotes.readNote();
+                parentNotes.displayNotes();
+                return parentNotes.getAnnotation(ParentDirectory);
+            }
+        }
+        return "";
+    }
     
     /**
      * Checks if the given string can be parsed as an integer.
@@ -196,7 +271,7 @@ public class CommandLine {
      * @param str the string to check
      * @return true if the string can be parsed as an integer, false otherwise
     */
-    public static boolean isInteger(final String str) {
+    private static boolean isInteger(final String str) {
         try {
             Integer.parseInt(str);
             return true;

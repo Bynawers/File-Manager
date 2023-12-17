@@ -49,29 +49,20 @@ public class Directory extends ElementRepertory {
         try {
             String newPath = path + "/" + this.getName();
             Path pathRef = Paths.get(newPath);
-            System.out.println(pathRef);
             Files.createDirectory(pathRef);
         } catch (FileAlreadyExistsException e) {
-            System.out.println("Erreur : Le dossier '"
-                + this.getName() + "' existe déjà");
+            // fichier existe déjà
             return;
         } catch (IOException e) {
-            System.out.println("Erreur : Impossible de creer le dossier.");
+            // impossible créer dossier
             e.printStackTrace();
             return;
         }
     }
 
-    public ElementRepertory getElementByNer(Map<String, ElementRepertory> currentRepertoryElements, int nerTmp) {
-        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
-            ElementRepertory element = entry.getValue();
-            if (element.getNer() == nerTmp) {
-                return element;
-            }
-        }
-        return null;
+    @Override
+    public void delete() {
     }
-
 
     /**
      * Find a specific file from its name recursively.

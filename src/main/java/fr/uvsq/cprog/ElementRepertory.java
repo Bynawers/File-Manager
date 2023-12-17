@@ -100,4 +100,5 @@ public abstract class ElementRepertory {
     abstract public boolean isDirectory();
     abstract public boolean isFile();
 
+    abstract public void delete();
 }

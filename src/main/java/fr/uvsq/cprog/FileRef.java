@@ -27,20 +27,16 @@ public class FileRef extends ElementRepertory {
         return true;
     }
 
-    public void delete(Map<String, ElementRepertory> currentRepertoryElements, int deleteId) {
-        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
-            ElementRepertory element = entry.getValue();
-
-            if (element.getNer() == deleteId && element.isFile()) {
-                Path path = Paths.get(element.getPath());
-                try {
-                    Files.delete(path);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    @Override
+    public void delete() {
+        Path path = Paths.get(getPath());
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+    
 
     public void visualization(String path) {
         File file = new File(path);
@@ -63,7 +59,7 @@ public class FileRef extends ElementRepertory {
                 }
 
             } else{
-                // fichier n'est pas un texte
+                // fichier n'est pas
                 long fileSize = file.length();
                 System.out.println("La taille du fichier est de : " + fileSize + " Ko");
             }
