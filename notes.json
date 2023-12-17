@@ -1,0 +1,58 @@
+[
+  {
+    "name": ".git",
+    "annotation": ""
+  },
+  {
+    "name": ".vscode",
+    "annotation": ""
+  },
+  {
+    "name": "target",
+    "annotation": ""
+  },
+  {
+    "name": "src",
+    "annotation": ""
+  },
+  {
+    "name": "mvnw.cmd",
+    "annotation": ""
+  },
+  {
+    "name": "test",
+    "annotation": "ROOT"
+  },
+  {
+    "name": "mvnw",
+    "annotation": ""
+  },
+  {
+    "name": ".mvn",
+    "annotation": ""
+  },
+  {
+    "name": "checkstyle",
+    "annotation": ""
+  },
+  {
+    "name": "pom.xml",
+    "annotation": ""
+  },
+  {
+    "name": "README.adoc",
+    "annotation": ""
+  },
+  {
+    "name": "notes.json",
+    "annotation": ""
+  },
+  {
+    "name": "google_style.xml",
+    "annotation": ""
+  },
+  {
+    "name": ".gitignore",
+    "annotation": ""
+  }
+]

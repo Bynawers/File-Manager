@@ -45,6 +45,12 @@ abstract class Command {
         this.path = path;
     }
     /** 
+     * Modifie l'aguement de la commande.
+     */
+    public void setArgs(String args) {
+        this.args = args;
+    }
+    /** 
      * @return Le Path de la commande.
      */
     public String getPath() {

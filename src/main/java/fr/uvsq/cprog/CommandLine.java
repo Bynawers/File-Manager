@@ -219,7 +219,7 @@ public class CommandLine {
      * dossier courant, si il existe déjà, vérifie la validité du fichier.
      * @param path Le path du dossier parent.
      */
-    private Notes generateNotesFile(String path) {
+    public Notes generateNotesFile(String path) {
         File directory = new File(path);
         File[] directoryChildrens = directory.listFiles();
 
@@ -247,7 +247,7 @@ public class CommandLine {
      * puis stock dans la Map currentRepertoryElements de la classe.
      * @param path Le path du dossier parent.
      */
-    private void generateInstancesRepertory(String path) {
+    public void generateInstancesRepertory(String path) {
         if (path == null) {
             return;
         }
@@ -284,7 +284,7 @@ public class CommandLine {
      * Récupère l'annotation du dossier courant à partir du fichier notes.json du dossier parent.
      * @return L'annotation du dossier courant.
      */
-    private String getCurrentPathAnnotation() {
+    public String getCurrentPathAnnotation() {
 
         Directory utility = new Directory("utility", 0, "");
         String parentPath = utility.parentPath(currentPath);
@@ -311,7 +311,7 @@ public class CommandLine {
      * @param str the string to check
      * @return true if the string can be parsed as an integer, false otherwise
     */
-    private static boolean isInteger(final String str) {
+    public static boolean isInteger(final String str) {
         try {
             Integer.parseInt(str);
             return true;
