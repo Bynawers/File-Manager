@@ -8,30 +8,59 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * La classe abstraite Command impose une structure à chaque
+ * classe hérité de Command, cela implique les informations utilitaires
+ * pour effectuer les commandes ainsi que des fonctions getName et execute
+ * necessaire pour le bon fonctionnement du programme.
+ */
 abstract class Command {
+    /* Map du nom éléments du dossier courant associés à leur instance */
     Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
-    /** The ner in the command. */
+    /* Le Ner affecté par la commande */
     int ner;
-    /** The name of the command. */
-    String name;
-    /** The arguments of the command. */
+    /* L'arguments de la commande */
     String args;
-    /** The path of the command. */
+    /* Le chemin d'accès */
     String path;
-
+    /* L'élément copié */
     ElementRepertory copy;
+    /* L'instance Notes du dossier courant où est effectué la commande */
     Notes notes;
 
+    /** 
+     * Obtiens le nom de la commande. 
+     * @return Chaine de charactère.
+     */
     abstract String getName();
+    /** 
+     * Fonction d'execution de la commande.
+     */
     abstract void execute();
 
+    /** 
+     * Modifie le Path de la commande.
+     */
     public void setPath(String path) {
         this.path = path;
     }
+    /** 
+     * @return Le Path de la commande.
+     */
     public String getPath() {
         return path;
     }
+    /** 
+     * @return L'argument de la commande.
+     */
+    public String getArgs() {
+        return args;
+    }
 
+    /** 
+     * Obtiens l'instance d'un élément à partir de son Ner. 
+     * @return L'élément associé au Ner de la commande.
+     */
     public ElementRepertory getElementByNer() {
         for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
             ElementRepertory element = entry.getValue();
@@ -43,7 +72,10 @@ abstract class Command {
     }
 }
 
-
+/**
+ * Créer un dossier à partir de la commande mkdir, necessite un argument
+ * représentant le nom du dossier.
+ */
 class CreateDirectoryCommand extends Command {
     @Override
     public String getName() {
@@ -60,6 +92,9 @@ class CreateDirectoryCommand extends Command {
     }
 }
 
+/**
+ * Quitte le programme avec la commande exit.
+ */
 class ExitCommand extends Command {
     @Override
     public String getName() {
@@ -72,6 +107,10 @@ class ExitCommand extends Command {
     }
 }
 
+/**
+ * Déplacement dans les fichier avec la commande cd, necessite un argument,
+ * représentant le chemin à prendre.
+ */
 class CdCommand extends Command {
     @Override
     public String getName() {
@@ -103,6 +142,10 @@ class CdCommand extends Command {
     }
 }
 
+/**
+ * Affichage des éléments courants ainsi que leur Ner
+ * à l'aide de la commande ls (développement seulement).
+ */
 class LsCommand extends Command {
     @Override
     public String getName() {
@@ -121,7 +164,11 @@ class LsCommand extends Command {
     }
 }
 
-
+// TODO cut dossier.
+/**
+ * Supprime un fichier/dossier à partir de son Ner,
+ * à l'aide de la commande cut.
+ */
 class CutCommand extends Command {
     @Override
     public String getName() {
@@ -139,7 +186,12 @@ class CutCommand extends Command {
         element.delete();
     }
 }
-// TODO ajouter copy folder
+
+// TODO copie dossier.
+/**
+ * Copie un fichier/dossier à partir
+ * de son Ner à l'aide de la commande copy
+ */
 class CopyCommand extends Command {
     @Override
     public String getName() {
@@ -163,6 +215,11 @@ class CopyCommand extends Command {
     }
 }
 
+// TODO past dossier.
+/**
+ * Créer un nouveau fichier/dossier identique au fichier/dossier
+ * copié à partir de son Ner, à l'aide de la commande past.
+ */
 class PastCommand extends Command {
     @Override
     public String getName() {
@@ -192,6 +249,11 @@ class PastCommand extends Command {
     }
 }
 
+/**
+ * Visualise un fichier à partir de son Ner,
+ * si le fichier est un .txt, affiche son contenu,
+ * sinon affiche sa taille.
+ */
 class VisuCommand extends Command {
     @Override
     public String getName() {
@@ -211,6 +273,10 @@ class VisuCommand extends Command {
     }
 }
 
+//TODO find dossier
+/**
+ * Trouves fichier à partir de son nom à l'aide de la commande find.
+ */
 class FindCommand extends Command {
     @Override
     public String getName() {
@@ -227,12 +293,16 @@ class FindCommand extends Command {
     }
 }
 
+/**
+ * Affecte une annotation à une dossier/fichier à partir de son Ner,
+ * à l'aide de la commande +.
+ */
 class AnnotateCommand extends Command {
     @Override
     public String getName() {
         return "+";
     }
-
+    
     @Override
     public void execute() {
         if (ner == -1 || args == null || notes == null) {
@@ -245,6 +315,10 @@ class AnnotateCommand extends Command {
     }
 }
 
+/**
+ * Supprime l'annotation d'un fichier/dossier à partir de son Ner,
+ * à l'aide de la commande -.
+ */
 class DesannotateCommand extends Command {
     @Override
     public String getName() {

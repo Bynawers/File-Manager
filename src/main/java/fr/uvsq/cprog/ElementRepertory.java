@@ -63,8 +63,17 @@ public abstract class ElementRepertory {
         return ner;
     }
 
+    /**
+     * Obtiens le nom du fichier copié à partir du nom de l'instance,
+     * exemple test.txt -> test_copie.txt.
+     * @return Le nom de la copie.
+     */
     public String getNameCopy() {
         String[] splitName = this.getName().split("\\.");
+        if (splitName.length == 1) {
+            String nameElement = splitName[0];
+            return nameElement + "_copie";
+        }
         if (splitName.length > 2) {
             return name;
         }
@@ -73,12 +82,26 @@ public abstract class ElementRepertory {
         return nameElement + "_copie." + extensionElement;
     }
 
+    /**
+     * Obtiens le nom du dernier dossier dans le path courant.
+     * @return Le nom du dossier parent.
+     */
     public String lastName(String path) {
+        if (path == null) {
+            return "";
+        }
         String[] splitPath = path.split("/");
         return splitPath[splitPath.length - 1];
     }
 
+    /**
+     * Obtiens le path du dernier dossier dans le path courant.
+     * @return Le path du dossier parent.
+     */
     public String parentPath(String paths) {
+        if (paths.equals("")) {
+            return "";
+        }
         String[] splitPath = paths.split("/");
         String newPath = "";
 
@@ -93,12 +116,15 @@ public abstract class ElementRepertory {
         return "";
     }
 
+    /**
+     * Obtiens l'instance de la classe.
+     * @return L'instance de la classe.
+     */
     public ElementRepertory getSelf() {
         return this;
     }
 
     abstract public boolean isDirectory();
     abstract public boolean isFile();
-
     abstract public void delete();
 }

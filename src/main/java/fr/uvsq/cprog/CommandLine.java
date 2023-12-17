@@ -12,23 +12,34 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe principale qui s'occupe de la gestion de l'interface, du prompt, 
+ * des commandes des utilisateurs, ainsi que l'execution des commandes.
+ */
 public class CommandLine {
-     /** Map to store commands. */
+    /* HashMap de toutes les commandes associés au nom de la commande */
     private final Map<String, Command> commands = new HashMap<>();
+    /* HashMap de tous les éléments associés à leur nom */
     private Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
-
+    /* Instance de la commande */
     private static Command command;
+    /* Path courant du programme */
     private static String currentPath;
-    private static String currentName;
+    /* Arguement courant du programme */
     private static String currentArgs;
+    /* Nom de la commande */
+    private static String currentName;
+    /* Annotation du dossier courant */
     private static String currentAnnotation;
+    /* Element copié courant du programme */
     private static ElementRepertory currentCopy;
+    /* Notes du dossier courant */
     private static Notes currentNotes;
+    /* Ner de la commande */
     private static int currentNer;
 
-
     /**
-     * List of all commands.
+     * Initialisation de la HashMap commands stockant toutes les commandes.
      */
     public void initializeCommands() {
         addCommand(new CreateDirectoryCommand());
@@ -44,7 +55,11 @@ public class CommandLine {
         addCommand(new DesannotateCommand());
     }
 
-    private void addCommand(final Command command) {
+    /**
+     * Ajoutes une commande au HashMap Commands permettant ainsi à partir d'un String,
+     * d'obtenir l'instance de la commande associé.
+     */
+    public void addCommand(final Command command) {
         commands.put(command.getName(), command);
     }
 
@@ -94,7 +109,6 @@ public class CommandLine {
 
             if (command != null) {
                 command.ner = currentNer;
-                command.name = currentName;
                 command.args = currentArgs;
                 command.copy = currentCopy;
                 command.notes = currentNotes;
@@ -117,6 +131,11 @@ public class CommandLine {
         }
     }
 
+    /**
+     * Analyse l'entrée de l'utilisateur et récupère les informations,
+     * en les affectant dans les bonnes variables.
+     * @param parsedLine Le tableau d'entrée de l'utilisateur.
+     */
     private void parseUser(String[] parsedLine) {
         currentNer = parsedLine.length > 0
             ? isInteger(parsedLine[0])
@@ -137,8 +156,15 @@ public class CommandLine {
             : null;
     }
 
+    /**
+     * Modifie les notes du fichier Notes.json si une commande
+     * mkdir/past/cut/cd a été utilisé auparavant.
+     * @param currentNotes L'instances Note de dossier courant.
+     * @param command L'instance Command de la commande executé.
+     * @return La nouvelle instance Notes modifées.
+     */
     private Notes modifyNotes(Notes currentNotes, Command command) {
-        String cmdName = command.name;
+        String cmdName = command.getName();
         String nameFile = "";
 
         if (cmdName.equals("mkdir")) {
@@ -159,8 +185,12 @@ public class CommandLine {
         return currentNotes;
     }
 
+    /**
+     * Affiches les informations neccessaire à l'utilisateurs afin de connaître
+     * l'état actuel du dossier courant.
+     * @param path Le path à afficher dans le terminal.
+     */
     private void displayInterface(String path) {
-
         Directory currentDirectory = new Directory(path, 0, "");
 
         AnsiConsole.out()
@@ -182,10 +212,13 @@ public class CommandLine {
             .fg(Ansi.Color.GREEN)
             .a("[" + currentDirectory.lastName(path) + "]$ ")
             .reset());
-
-        // TODO annotation du répertoire courant
     }
 
+    /**
+     * Génère l'instance Notes ainsi que son fichier Notes.json  dans le
+     * dossier courant, si il existe déjà, vérifie la validité du fichier.
+     * @param path Le path du dossier parent.
+     */
     private Notes generateNotesFile(String path) {
         File directory = new File(path);
         File[] directoryChildrens = directory.listFiles();
@@ -200,7 +233,6 @@ public class CommandLine {
         for (File file : directoryChildrens) {
             if (file.getName().equals("notes.json")) {
                 notes.readNote();
-                //notes.writeFile();
                 notes.checkNotes(directoryChildrens);
                 return notes;
             }
@@ -210,6 +242,11 @@ public class CommandLine {
         return notes;
     }
 
+    /**
+     * Génère les instances du dossier courants et affectes un Ner respectif
+     * puis stock dans la Map currentRepertoryElements de la classe.
+     * @param path Le path du dossier parent.
+     */
     private void generateInstancesRepertory(String path) {
         if (path == null) {
             return;
@@ -243,6 +280,10 @@ public class CommandLine {
         }
     }
 
+    /**
+     * Récupère l'annotation du dossier courant à partir du fichier notes.json du dossier parent.
+     * @return L'annotation du dossier courant.
+     */
     private String getCurrentPathAnnotation() {
 
         Directory utility = new Directory("utility", 0, "");
@@ -258,7 +299,6 @@ public class CommandLine {
             
             if (file.getName().equals("notes.json")) {
                 parentNotes.readNote();
-                parentNotes.displayNotes();
                 return parentNotes.getAnnotation(ParentDirectory);
             }
         }
@@ -278,5 +318,11 @@ public class CommandLine {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+    public Map<String, ElementRepertory> getCurrentRepertoryElements() {
+        return currentRepertoryElements;
+    }
+    public boolean containsCommand(String commandName) {
+        return commands.containsKey(commandName);
     }
 }

@@ -14,21 +14,42 @@ public class Directory extends ElementRepertory {
 
     /**
      * Constructs a new Directory with the specified attributes.
-     *
+     *g
      * @param nameTmp The name of the directory.
      * @param nerTmp The number of the directory.
+     * @param pathTmp The path of the directory.
      */
     public Directory(final String nameTmp, final int nerTmp, final String pathTmp) {
         super(nameTmp, nerTmp, pathTmp);
     }
 
+    /**
+     * Indique que l'élément est un dossier.
+     * @return Booléen vrai.
+     */
+    @Override
     public boolean isDirectory() {
         return true;
     }
+    /**
+     * Indique que l'élément n'est pas un fichier.
+     * @return Booléen faux.
+     */
+    @Override
     public boolean isFile() {
         return false;
     }
 
+    /**
+     * Supprime récursivement le dossier ainsi que tous ses éléments.
+     */
+    @Override
+    public void delete() {
+    }
+
+    /**
+     * Affiche tous les éléments de currentRepertoryElements dans l'interface.
+     */
     public void displayElementsRepertory(Map<String, ElementRepertory> currentRepertoryElements) {
         for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
             ElementRepertory element = entry.getValue();
@@ -45,6 +66,10 @@ public class Directory extends ElementRepertory {
         }
     }
 
+    /**
+     * Crée un nouveau dossier à partir du path.
+     * @param path Chemin d'accès où créer le nouveau dossier.
+     */
     public void createDirectory(String path) {
         try {
             String newPath = path + "/" + this.getName();
@@ -55,18 +80,12 @@ public class Directory extends ElementRepertory {
             return;
         } catch (IOException e) {
             // impossible créer dossier
-            e.printStackTrace();
             return;
         }
     }
 
-    @Override
-    public void delete() {
-    }
-
     /**
      * Find a specific file from its name recursively.
-     *
      * @param name The name of the file to find.
      */
     public void findRecursive(final String name, String path) {
@@ -74,6 +93,13 @@ public class Directory extends ElementRepertory {
         searchFile(directory, name, path);
     }
     
+    /**
+     * Recherche un fichier à partir de son nom, récursivement
+     * dans un dossier ainsi que ses sous dossier.
+     * @param directory Le dossier racine de la recherche.
+     * @param name Le nom du fichier à trouver.
+     * @param path Le chemin d'accès qui sera affichier si le fichier est trouvé.
+     */
     private void searchFile(File directory, String name, String path) {
         File[] directoryChildrens = directory.listFiles();
         

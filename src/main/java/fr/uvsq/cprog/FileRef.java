@@ -7,7 +7,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class FileRef extends ElementRepertory {
 
@@ -15,18 +14,32 @@ public class FileRef extends ElementRepertory {
      * Constructor for the File class.
      * @param nameTmp The name of the file.
      * @param nerTmp  The number of the file.
+     * @param pathTmp The path of the file.
      */
     public FileRef(final String nameTmp, final int nerTmp, final String pathTmp) {
         super(nameTmp, nerTmp, pathTmp);
     }
 
+    /**
+     * Indique que l'élément n'est pas un dossier.
+     * @return Booléen faux.
+     */
+    @Override
     public boolean isDirectory() {
         return false;
     }
+    /**
+     * Indique que l'élément est un fichier.
+     * @return Booléen vrai.
+     */
+    @Override
     public boolean isFile() {
         return true;
     }
 
+    /**
+     * Supprime le fichier correspondant à l'instance.
+     */
     @Override
     public void delete() {
         Path path = Paths.get(getPath());
@@ -37,7 +50,10 @@ public class FileRef extends ElementRepertory {
         }
     }
     
-
+    /**
+     * Visualise le fichier, si cest un fichier .txt cela affiche le contenu du texte,
+     * sinon cela affiche sa taille.
+     */
     public void visualization(String path) {
         File file = new File(path);
 
@@ -59,7 +75,7 @@ public class FileRef extends ElementRepertory {
                 }
 
             } else{
-                // fichier n'est pas
+                // fichier n'est pas un .txt
                 long fileSize = file.length();
                 System.out.println("La taille du fichier est de : " + fileSize + " Ko");
             }
