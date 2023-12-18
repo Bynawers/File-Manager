@@ -60,10 +60,10 @@ public class CommandLine {
      * Ajoutes une commande au HashMap Commands permettant
      * ainsi à partir d'un String,
      * d'obtenir l'instance de la commande associé.
-     * @param command La commande
+     * @param commandTemp La commande
      */
-    public void addCommand(final Command command) {
-        commands.put(command.getName(), command);
+    public void addCommand(final Command commandTemp) {
+        commands.put(commandTemp.getName(), commandTemp);
     }
 
     /**
@@ -162,29 +162,30 @@ public class CommandLine {
     /**
      * Modifie les notes du fichier Notes.json si une commande
      * mkdir/past/cut/cd a été utilisé auparavant.
-     * @param currentNotes L'instances Note de dossier courant.
-     * @param command L'instance Command de la commande executé.
+     * @param currentNotesTemp L'instances Note de dossier courant.
+     * @param commandTemp L'instance Command de la commande executé.
      * @return La nouvelle instance Notes modifées.
      */
-    public Notes modifyNotes(Notes currentNotes, final Command command) {
-        String cmdName = command.getName();
+    public Notes modifyNotes(final Notes currentNotesTemp,
+                             final Command commandTemp) {
+        String cmdName = commandTemp.getName(); //TODO get checked by theo
         String nameFile = "";
-
+        Notes modifiedNotes = currentNotesTemp;
         if (cmdName.equals("mkdir")) {
-            nameFile = command.getArgs();
-            currentNotes.addNote(nameFile);
+            nameFile = commandTemp.getArgs();
+            modifiedNotes.addNote(nameFile);
 
         } else if (cmdName.equals("past")) {
-            nameFile = command.getCopy().getNameCopy();
-            currentNotes.addNote(nameFile);
+            nameFile = commandTemp.getCopy().getNameCopy();
+            modifiedNotes.addNote(nameFile);
 
         } else if (cmdName.equals("cut")) {
-            nameFile = command.getCopy().getName();
-            currentNotes.deleteNote(nameFile);
+            nameFile = commandTemp.getCopy().getName();
+            modifiedNotes.deleteNote(nameFile);
         } else if (cmdName.equals("cd")) {
-            currentNotes = generateNotesFile(command.getPath());
+            modifiedNotes = generateNotesFile(commandTemp.getPath());
         }
-        return currentNotes;
+        return modifiedNotes;
     }
 
     /**
@@ -291,7 +292,7 @@ public class CommandLine {
 
         Directory utility = new Directory("utility", 0, "");
         String parentPath = utility.parentPath(currentPath);
-        String ParentDirectory = utility.lastName(currentPath);
+        String parentDirectory = utility.lastName(currentPath);
 
         File directory = new File(parentPath);
         File[] directoryChildrens = directory.listFiles();
@@ -303,7 +304,7 @@ public class CommandLine {
 
             if (file.getName().equals("notes.json")) {
                 parentNotes.readNote();
-                return parentNotes.getAnnotation(ParentDirectory);
+                return parentNotes.getAnnotation(parentDirectory);
             }
         }
         return "";

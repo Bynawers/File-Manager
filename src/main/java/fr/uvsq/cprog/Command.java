@@ -33,29 +33,29 @@ abstract class Command {
         return currentRepertoryElements;
     }
     public void setCurrentRepertoryElements(
-            final Map<String, ElementRepertory> currentRepertoryElements) {
-        this.currentRepertoryElements = currentRepertoryElements;
+            final Map<String, ElementRepertory> currentRepertoryElementsTemp) {
+        this.currentRepertoryElements = currentRepertoryElementsTemp;
     }
     public int getNer() {
         return ner;
     }
-    public void setNer(final int ner) {
-        this.ner = ner;
+    public void setNer(final int nerTemp) {
+        this.ner = nerTemp;
     }
     public ElementRepertory getCopy() {
         return copy;
     }
 
-    public void setCopy(final ElementRepertory copy) {
-        this.copy = copy;
+    public void setCopy(final ElementRepertory copyTemp) {
+        this.copy = copyTemp;
     }
 
     public Notes getNotes() {
         return notes;
     }
 
-    public void setNotes(final Notes notes) {
-        this.notes = notes;
+    public void setNotes(final Notes notesTemp) {
+        this.notes = notesTemp;
     }
     /**
      * Obtiens le nom de la commande.
@@ -69,17 +69,17 @@ abstract class Command {
 
     /**
      * Modifie le Path de la commande.
-     * @param path Le nouveau chemin.
+     * @param pathTemp Le nouveau chemin.
      */
-    public void setPath(final String path) {
-        this.path = path;
+    public void setPath(final String pathTemp) {
+        this.path = pathTemp;
     }
     /**
      * Modifie l'aguement de la commande.
-     * @param args L'argument de la commande.
+     * @param argsTemp L'argument de la commande.
      */
-    public void setArgs(final String args) {
-        this.args = args;
+    public void setArgs(final String argsTemp) {
+        this.args = argsTemp;
     }
     /**
      * @return Le Path de la commande.

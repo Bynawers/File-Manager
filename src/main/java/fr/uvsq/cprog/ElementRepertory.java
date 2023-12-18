@@ -48,10 +48,10 @@ public abstract class ElementRepertory {
     }
     /**
      * Sets the path for the object.
-     * @param  path  the new path.
+     * @param  pathTemp  the new path.
      */
-    public void setPath(final String path) {
-        this.path = path;
+    public void setPath(final String pathTemp) {
+        this.path = pathTemp;
     }
 
     /**
@@ -92,14 +92,14 @@ public abstract class ElementRepertory {
 
     /**
      * Obtiens le nom du dernier dossier dans le path courant.
-     * @param path Le path du dossier.
+     * @param pathTemp Le path du dossier.
      * @return Le nom du dossier parent.
      */
-    public String lastName(final String path) {
-        if (path == null) {
+    public String lastName(final String pathTemp) {
+        if (pathTemp == null) {
             return "";
         }
-        String[] splitPath = path.split("/");
+        String[] splitPath = pathTemp.split("/");
         return splitPath[splitPath.length - 1];
     }
 

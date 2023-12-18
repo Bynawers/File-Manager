@@ -48,27 +48,27 @@ public class Notes {
     }
     /**
      * Modifie le path de l'instance.
-     * @param path Le nouveau path.
+     * @param pathTemp Le nouveau path.
      */
-    public void setPath(final String path) {
-        this.path = path;
+    public void setPath(final String pathTemp) {
+        this.path = pathTemp;
     }
 
     /**
      * Crée une Liste de Note à partir d'un tableau de fichier/dossier.
-     * @param fileList Une liste de fichier ou dossier.
+     * @param fileListTemp Une liste de fichier ou dossier.
      * @return une liste de notes.
      */
-    public List<Note> setNotes(final File[] fileList) {
-        List<Note> notes = new ArrayList<>();
-        if (fileList == null) {
-            return notes;
+    public List<Note> setNotes(final File[] fileListTemp) {
+        List<Note> notesTemp = new ArrayList<>();
+        if (fileListTemp == null) {
+            return notesTemp;
         }
 
-        for (File file: fileList) {
-            notes.add(new Note(file.getName(), ""));
+        for (File file: fileListTemp) {
+            notesTemp.add(new Note(file.getName(), ""));
         }
-        return notes;
+        return notesTemp;
     }
 
     /**
@@ -114,7 +114,7 @@ public class Notes {
                     break;
                 }
             }
-            if (find == false) {
+            if (!find) {
                 notes.add(new Note(file.getName(), ""));
             }
         }
@@ -245,7 +245,7 @@ class Note {
      * @param nameTmp Nom du fichier/dossier.
      * @param annotationTmp Annotation du fichier/dossier.
      */
-    public Note(final String nameTmp, final String annotationTmp) {
+    Note(final String nameTmp, final String annotationTmp) {
         this.name = nameTmp;
         this.annotation = annotationTmp;
     }
@@ -266,16 +266,16 @@ class Note {
     }
     /**
      * Modifie l'annotation.
-     * @param annotation nouvelle annotation.
+     * @param annotationTemp nouvelle annotation.
      */
-    public void setAnnotation(final String annotation) {
-        this.annotation = annotation;
+    public void setAnnotation(final String annotationTemp) {
+        this.annotation = annotationTemp;
     }
     /**
      * Modifie le nom.
-     * @param name
+     * @param nameTemp
      */
-    public void setName(final String name) {
-        this.name = name;
+    public void setName(final String nameTemp) {
+        this.name = nameTemp;
     }
 }
