@@ -15,60 +15,92 @@ import java.util.Map;
  * necessaire pour le bon fonctionnement du programme.
  */
 abstract class Command {
-    /* Map du nom éléments du dossier courant associés à leur instance */
-    Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
-    /* Le Ner affecté par la commande */
-    int ner;
-    /* L'arguments de la commande */
-    String args;
-    /* Le chemin d'accès */
-    String path;
-    /* L'élément copié */
-    ElementRepertory copy;
-    /* L'instance Notes du dossier courant où est effectué la commande */
-    Notes notes;
+    /** Map du nom éléments du dossier courant associés à leur instance. */
+    private Map<String, ElementRepertory>
+            currentRepertoryElements = new HashMap<>();
+    /** Le Ner affecté par la commande. */
+    private int ner;
+    /** L'arguments de la commande. */
+    private String args;
+    /** Le chemin d'accès. */
+    private String path;
+    /** L'élément copié. */
+    private ElementRepertory copy;
+    /** L'instance Notes du dossier courant où est effectué la commande. */
+    private Notes notes;
 
-    /** 
-     * Obtiens le nom de la commande. 
+    public Map<String, ElementRepertory> getCurrentRepertoryElements() {
+        return currentRepertoryElements;
+    }
+    public void setCurrentRepertoryElements(
+            final Map<String, ElementRepertory> currentRepertoryElements) {
+        this.currentRepertoryElements = currentRepertoryElements;
+    }
+    public int getNer() {
+        return ner;
+    }
+    public void setNer(final int ner) {
+        this.ner = ner;
+    }
+    public ElementRepertory getCopy() {
+        return copy;
+    }
+
+    public void setCopy(final ElementRepertory copy) {
+        this.copy = copy;
+    }
+
+    public Notes getNotes() {
+        return notes;
+    }
+
+    public void setNotes(final Notes notes) {
+        this.notes = notes;
+    }
+    /**
+     * Obtiens le nom de la commande.
      * @return Chaine de charactère.
      */
     abstract String getName();
-    /** 
+    /**
      * Fonction d'execution de la commande.
      */
     abstract void execute();
 
-    /** 
+    /**
      * Modifie le Path de la commande.
+     * @param path Le nouveau chemin.
      */
-    public void setPath(String path) {
+    public void setPath(final String path) {
         this.path = path;
     }
-    /** 
+    /**
      * Modifie l'aguement de la commande.
+     * @param args L'argument de la commande.
      */
-    public void setArgs(String args) {
+    public void setArgs(final String args) {
         this.args = args;
     }
-    /** 
+    /**
      * @return Le Path de la commande.
      */
     public String getPath() {
         return path;
     }
-    /** 
+    /**
      * @return L'argument de la commande.
      */
     public String getArgs() {
         return args;
     }
 
-    /** 
-     * Obtiens l'instance d'un élément à partir de son Ner. 
+    /**
+     * Obtiens l'instance d'un élément à partir de son Ner.
      * @return L'élément associé au Ner de la commande.
      */
     public ElementRepertory getElementByNer() {
-        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+        for (Map.Entry<String, ElementRepertory>
+                entry : currentRepertoryElements.entrySet()) {
             ElementRepertory element = entry.getValue();
             if (element.getNer() == ner) {
                 return element;
@@ -90,10 +122,11 @@ class CreateDirectoryCommand extends Command {
 
     @Override
     public void execute() {
-        if (args == null) {
+        String arguments = getArgs();
+        if (arguments == null) {
             return;
         }
-        Directory newDirectory = new Directory(args, 0, "");
+        Directory newDirectory = new Directory(arguments, 0, "");
         newDirectory.createDirectory(getPath());
     }
 }
@@ -125,20 +158,20 @@ class CdCommand extends Command {
 
     @Override
     public void execute() {
-        if (args == null) {
+        String arguments = getArgs();
+        if (arguments == null) {
             return;
         }
 
         String newPath;
-        if (!args.equals("../") && !args.equals("..")) {
-            newPath = getPath() + "/" + args;
-        }
-        else {
+        if (!arguments.equals("../") && !arguments.equals("..")) {
+            newPath = getPath() + "/" + arguments;
+        } else {
             Directory currentDirectory = new Directory(getPath(), 0, "");
             newPath = currentDirectory.parentPath(getPath());
         }
 
-        Path pathRef = Paths.get(getPath() + "/" + args);
+        Path pathRef = Paths.get(getPath() + "/" + arguments);
 
         if (Files.exists(pathRef) && Files.isDirectory(pathRef)) {
             setPath(newPath);
@@ -166,7 +199,8 @@ class LsCommand extends Command {
             // pas un dossier
             return;
         }
-        directory.displayElementsRepertory(currentRepertoryElements);
+        Map<String, ElementRepertory> elements = getCurrentRepertoryElements();
+        directory.displayElementsRepertory(elements);
     }
 }
 
@@ -183,20 +217,22 @@ class CutCommand extends Command {
 
     @Override
     public void execute() {
-        if (this.ner == -1) {
+        if (getNer() == -1) {
             return;
         }
 
         ElementRepertory element = getElementByNer();
-        copy = element;
-        element.delete();
+        if (element != null) {
+            setCopy(element);
+            element.delete();
+        }
     }
 }
 
 // TODO copie dossier.
 /**
  * Copie un fichier/dossier à partir
- * de son Ner à l'aide de la commande copy
+ * de son Ner à l'aide de la commande copy.
  */
 class CopyCommand extends Command {
     @Override
@@ -206,15 +242,16 @@ class CopyCommand extends Command {
 
     @Override
     public void execute() {
-        if (this.ner == -1) {
+        if (getNer() == -1) {
             // entrer un ner
             return;
         }
 
-        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+        for (Map.Entry<String, ElementRepertory>
+                entry : getCurrentRepertoryElements().entrySet()) {
             ElementRepertory element = entry.getValue();
-            if (element.getNer() == this.ner && element.isFile()) {
-                this.copy = element.getSelf();
+            if (element.getNer() == getNer() && element.isFile()) {
+                setCopy(element.getSelf());
                 return;
             }
         }
@@ -234,11 +271,14 @@ class PastCommand extends Command {
 
     @Override
     public void execute() {
-        if (this.copy == null) {
+        ElementRepertory copiedElement = getCopy();
+
+        if (copiedElement == null) {
             return;
         }
-        String copyPath = copy.parentPath(copy.getPath()) + "/" + copy.getNameCopy();
-        Path sourcePath = Paths.get(copy.getPath());
+        String copyPath = copiedElement.parentPath(copiedElement.getPath())
+                            + "/" + copiedElement.getNameCopy();
+        Path sourcePath = Paths.get(copiedElement.getPath());
         Path targetPath = Paths.get(copyPath);
 
         boolean existingFile = new File(copyPath).exists();
@@ -268,6 +308,7 @@ class VisuCommand extends Command {
 
     @Override
     public void execute() {
+        int ner = getNer();
         if (ner == -1) {
             return;
         }
@@ -291,11 +332,13 @@ class FindCommand extends Command {
 
     @Override
     public void execute() {
-        if (args == null) {
+         String argument = getArgs();
+        if (argument == null) {
             return;
         }
-        Directory currentDirectory = new Directory("root", 0, path);
-        currentDirectory.findRecursive(args, path);
+        String currentPath = getPath();
+        Directory currentDirectory = new Directory("root", 0, currentPath);
+        currentDirectory.findRecursive(argument, currentPath);
     }
 }
 
@@ -308,16 +351,18 @@ class AnnotateCommand extends Command {
     public String getName() {
         return "+";
     }
-    
+
     @Override
     public void execute() {
-        if (ner == -1 || args == null || notes == null) {
+        String annotation = getArgs();
+        if (getNer() == -1 || annotation == null || getNotes() == null) {
             return;
         }
 
         ElementRepertory element = getElementByNer();
         String name = element.getName();
-        notes.addAnnotation(args, name);
+        Notes notesInstance = getNotes();
+        notesInstance.addAnnotation(annotation, name);
     }
 }
 
@@ -333,11 +378,11 @@ class DesannotateCommand extends Command {
 
     @Override
     public void execute() {
-        if (ner == -1 || notes == null) {
+        if (getNer() == -1 || getNotes() == null) {
             return;
         }
         ElementRepertory element = getElementByNer();
         String name = element.getName();
-        notes.deleteAnnotation(name);
+        getNotes().deleteAnnotation(name);
     }
 }

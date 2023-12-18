@@ -13,29 +13,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Classe principale qui s'occupe de la gestion de l'interface, du prompt, 
+ * Classe principale qui s'occupe de la gestion de l'interface, du prompt,
  * des commandes des utilisateurs, ainsi que l'execution des commandes.
  */
 public class CommandLine {
-    /* HashMap de toutes les commandes associés au nom de la commande */
+    /** HashMap de toutes les commandes associés au nom de la commande. */
     private final Map<String, Command> commands = new HashMap<>();
-    /* HashMap de tous les éléments associés à leur nom */
-    private Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
-    /* Instance de la commande */
+    /** HashMap de tous les éléments associés à leur nom. */
+    private Map<String, ElementRepertory> currentRepertoryElements
+                                                    = new HashMap<>();
+    /** Instance de la commande. */
     private static Command command;
-    /* Path courant du programme */
+    /** Path courant du programme. */
     private static String currentPath;
-    /* Arguement courant du programme */
+    /** Arguement courant du programme. */
     private static String currentArgs;
-    /* Nom de la commande */
+    /** Nom de la commande. */
     private static String currentName;
-    /* Annotation du dossier courant */
+    /** Annotation du dossier courant. */
     private static String currentAnnotation;
-    /* Element copié courant du programme */
+    /** Element copié courant du programme. */
     private static ElementRepertory currentCopy;
-    /* Notes du dossier courant */
+    /** Notes du dossier courant. */
     private static Notes currentNotes;
-    /* Ner de la commande */
+    /** Ner de la commande. */
     private static int currentNer;
 
     /**
@@ -56,8 +57,10 @@ public class CommandLine {
     }
 
     /**
-     * Ajoutes une commande au HashMap Commands permettant ainsi à partir d'un String,
+     * Ajoutes une commande au HashMap Commands permettant
+     * ainsi à partir d'un String,
      * d'obtenir l'instance de la commande associé.
+     * @param command La commande
      */
     public void addCommand(final Command command) {
         commands.put(command.getName(), command);
@@ -100,23 +103,23 @@ public class CommandLine {
 
             String[] parsedLine = userInput.split("\\s+");
             parseUser(parsedLine);
-            
+
             if (command != null) {
-                currentCopy = command.copy;
+                currentCopy = command.getCopy();
             }
 
             command = currentName != null ? commands.get(currentName) : null;
 
             if (command != null) {
-                command.ner = currentNer;
-                command.args = currentArgs;
-                command.copy = currentCopy;
-                command.notes = currentNotes;
+                command.setNer(currentNer);
+                command.setArgs(currentArgs);
+                command.setCopy(currentCopy);
+                command.setNotes(currentNotes);
 
                 if (currentPath != null) {
                     command.setPath(currentPath);
                 }
-                command.currentRepertoryElements = currentRepertoryElements;
+                command.setCurrentRepertoryElements(currentRepertoryElements);
 
                 command.execute();
 
@@ -136,7 +139,7 @@ public class CommandLine {
      * en les affectant dans les bonnes variables.
      * @param parsedLine Le tableau d'entrée de l'utilisateur.
      */
-    public void parseUser(String[] parsedLine) {
+    public void parseUser(final String[] parsedLine) {
         currentNer = parsedLine.length > 0
             ? isInteger(parsedLine[0])
             ? Integer.parseInt(parsedLine[0])
@@ -163,23 +166,22 @@ public class CommandLine {
      * @param command L'instance Command de la commande executé.
      * @return La nouvelle instance Notes modifées.
      */
-    public Notes modifyNotes(Notes currentNotes, Command command) {
+    public Notes modifyNotes(Notes currentNotes, final Command command) {
         String cmdName = command.getName();
         String nameFile = "";
 
         if (cmdName.equals("mkdir")) {
-            nameFile = command.args;
+            nameFile = command.getArgs();
             currentNotes.addNote(nameFile);
 
         } else if (cmdName.equals("past")) {
-            nameFile = command.copy.getNameCopy();
+            nameFile = command.getCopy().getNameCopy();
             currentNotes.addNote(nameFile);
 
         } else if (cmdName.equals("cut")) {
-            nameFile = command.copy.getName();
+            nameFile = command.getCopy().getName();
             currentNotes.deleteNote(nameFile);
-        }
-        else if (cmdName.equals("cd")) {
+        } else if (cmdName.equals("cd")) {
             currentNotes = generateNotesFile(command.getPath());
         }
         return currentNotes;
@@ -190,7 +192,7 @@ public class CommandLine {
      * l'état actuel du dossier courant.
      * @param path Le path à afficher dans le terminal.
      */
-    private void displayInterface(String path) {
+    private void displayInterface(final String path) {
         Directory currentDirectory = new Directory(path, 0, "");
 
         AnsiConsole.out()
@@ -218,8 +220,9 @@ public class CommandLine {
      * Génère l'instance Notes ainsi que son fichier Notes.json  dans le
      * dossier courant, si il existe déjà, vérifie la validité du fichier.
      * @param path Le path du dossier parent.
+     * @return L'instance Notes
      */
-    public Notes generateNotesFile(String path) {
+    public Notes generateNotesFile(final String path) {
         File directory = new File(path);
         File[] directoryChildrens = directory.listFiles();
 
@@ -247,7 +250,7 @@ public class CommandLine {
      * puis stock dans la Map currentRepertoryElements de la classe.
      * @param path Le path du dossier parent.
      */
-    public void generateInstancesRepertory(String path) {
+    public void generateInstancesRepertory(final String path) {
         if (path == null) {
             return;
         }
@@ -264,16 +267,15 @@ public class CommandLine {
         }
 
         for (File file : directoryChildrens) {
-            
             newPath = path + "/" + file.getName();
 
             if (file.isDirectory()) {
-                currentRepertoryElements.put(file.getName(), new Directory(file.getName(), ner, newPath));
-            }
-            else if (file.isFile()) {
-                currentRepertoryElements.put(file.getName(), new FileRef(file.getName(), ner, newPath));
-            }
-            else {
+                currentRepertoryElements.put(file.getName(),
+                                new Directory(file.getName(), ner, newPath));
+            } else if (file.isFile()) {
+                currentRepertoryElements.put(file.getName(),
+                                new FileRef(file.getName(), ner, newPath));
+            } else {
                 //exception
             }
             ner++;
@@ -281,7 +283,8 @@ public class CommandLine {
     }
 
     /**
-     * Récupère l'annotation du dossier courant à partir du fichier notes.json du dossier parent.
+     * Récupère l'annotation du dossier courant à partir
+     * du fichier notes.json du dossier parent.
      * @return L'annotation du dossier courant.
      */
     public String getCurrentPathAnnotation() {
@@ -293,10 +296,11 @@ public class CommandLine {
         File directory = new File(parentPath);
         File[] directoryChildrens = directory.listFiles();
 
-        Notes parentNotes = new Notes(directoryChildrens, parentPath + "/notes.json");
-        
+        Notes parentNotes = new Notes(directoryChildrens, parentPath
+                                        + "/notes.json");
+
         for (File file : directoryChildrens) {
-            
+
             if (file.getName().equals("notes.json")) {
                 parentNotes.readNote();
                 return parentNotes.getAnnotation(ParentDirectory);
@@ -304,7 +308,7 @@ public class CommandLine {
         }
         return "";
     }
-    
+
     /**
      * Checks if the given string can be parsed as an integer.
      *
@@ -319,17 +323,26 @@ public class CommandLine {
             return false;
         }
     }
+    /** @return currentRepertoryElements */
     public Map<String, ElementRepertory> getCurrentRepertoryElements() {
         return currentRepertoryElements;
     }
-    public boolean containsCommand(String commandName) {
+    /** contains command.
+     * @param commandName command name
+     * @return commands */
+    public boolean containsCommand(final String commandName) {
         return commands.containsKey(commandName);
     }
-
+    /** Returns the current name.
+     * @return the current name
+    */
     public String getCurrentName() {
         return currentName;
     }
-
+    /**
+     * Returns the current arguments.
+     * @return the current arguments
+     */
     public String getCurrentArgs() {
         return currentArgs;
     }

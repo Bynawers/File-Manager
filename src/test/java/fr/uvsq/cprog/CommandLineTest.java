@@ -117,7 +117,7 @@ public class CommandLineTest {
         
         // avec cut
         CutCommand cutCommand = new CutCommand();
-        cutCommand.copy = new FileRef("testFile.txt", 0, tempFile.getAbsolutePath());
+        cutCommand.setCopy(new FileRef("testFile.txt", 0, tempFile.getAbsolutePath()));
         currentNotes = commandLine.modifyNotes(currentNotes, cutCommand);
         boolean cutDir = false;
         for (Note note : currentNotes.getNotes()) {
@@ -147,7 +147,7 @@ public class CommandLineTest {
         // pour past
         Command pastCommand = new PastCommand();
         ElementRepertory copiedElement = new FileRef("newFile.txt", 0, tempDir.getAbsolutePath());
-        pastCommand.copy = copiedElement;
+        pastCommand.setCopy(copiedElement);
         currentNotes = commandLine.modifyNotes(currentNotes, pastCommand);
     
         assertNotNull(currentNotes);

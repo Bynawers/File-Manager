@@ -14,8 +14,10 @@ import java.io.File;
 import java.io.FileReader;
 
 /**
- * La classe Notes représente l'ensemble des instances "Note" du dossier courant,
- * et permet d'écrire/supprimer/modifier de nouvelle Note dans un fichier Notes.json.
+ * La classe Notes représente l'ensemble des instances
+ * "Note" du dossier courant,
+ * et permet d'écrire/supprimer/modifier de nouvelle
+ * Note dans un fichier Notes.json.
  */
 public class Notes {
     /**
@@ -32,7 +34,7 @@ public class Notes {
      * @param fileList Une liste de fichier/dossier.
      * @param pathTmp Chemin d'accès du fichier Notes.json.
      */
-    public Notes(File[] fileList, String pathTmp) {
+    public Notes(final File[] fileList, final String pathTmp) {
         this.notes = setNotes(fileList);
         path = pathTmp;
     }
@@ -46,22 +48,24 @@ public class Notes {
     }
     /**
      * Modifie le path de l'instance.
+     * @param path Le nouveau path.
      */
-    public void setPath(String path) {
+    public void setPath(final String path) {
         this.path = path;
     }
 
     /**
      * Crée une Liste de Note à partir d'un tableau de fichier/dossier.
+     * @param fileList Une liste de fichier ou dossier.
      * @return une liste de notes.
      */
-    public List<Note> setNotes(File[] fileList) {
+    public List<Note> setNotes(final File[] fileList) {
         List<Note> notes = new ArrayList<>();
         if (fileList == null) {
             return notes;
         }
 
-        for(File file: fileList) {
+        for (File file: fileList) {
             notes.add(new Note(file.getName(), ""));
         }
         return notes;
@@ -81,7 +85,7 @@ public class Notes {
      * @param name Une liste de fichier/dossier.
      * @return chaîne de charactère de l'annotation.
      */
-    public String getAnnotation(String name) {
+    public String getAnnotation(final String name) {
         for (Note note : notes) {
             if (note.getName().equals(name)) {
                 return note.getAnnotation();
@@ -95,7 +99,7 @@ public class Notes {
      * correspond bien au fichier du dossier courant.
      * @param fileList Une liste de fichier/dossier.
      */
-    public void checkNotes(File[] fileList) {
+    public void checkNotes(final File[] fileList) {
         List<Note> notesNotFind = new ArrayList<>(notes);
         Iterator<Note> iterator = notesNotFind.iterator();
         Boolean find = false;
@@ -127,7 +131,7 @@ public class Notes {
     public void readNote() {
         try (FileReader reader = new FileReader(path)) {
 
-            Type listType = new TypeToken<List<Note>>() {}.getType();
+            Type listType = new TypeToken<List<Note>>() { }.getType();
             this.notes = new Gson().fromJson(reader, listType);
 
         } catch (Exception e) {
@@ -140,7 +144,7 @@ public class Notes {
      * @param annotation annotation du fichier.
      * @param name nom du fichier/dossier à annoter.
      */
-    public void addAnnotation(String annotation, String name) {
+    public void addAnnotation(final String annotation, final String name) {
         for (Note note: notes) {
             if (name.equals(note.getName())) {
                 note.setAnnotation(note.getAnnotation() + annotation);
@@ -154,7 +158,7 @@ public class Notes {
      * Surpprime l'annotation d'un fichier/dossier.
      * @param name nom du fichier/dossier à désannoter.
      */
-    public void deleteAnnotation(String name) {
+    public void deleteAnnotation(final String name) {
         for (Note note: notes) {
             if (name.equals(note.getName())) {
                 note.setAnnotation("");
@@ -168,7 +172,7 @@ public class Notes {
      * Ajoute une note d'un fichier/dossier aux fichier notes.json.
      * @param fileName nom du fichier/dossier à ajouter.
      */
-    public void addNote(String fileName) {
+    public void addNote(final String fileName) {
         for (Note note: notes) {
             if (fileName.equals(note.getName())) {
                 return;
@@ -182,7 +186,7 @@ public class Notes {
      * Supprime une note d'un fichier/dossier aux fichier notes.json.
      * @param fileName nom du fichier/dossier à supprimer.
      */
-    public void deleteNote(String fileName) {
+    public void deleteNote(final String fileName) {
         for (Note note: notes) {
             if (fileName.equals(note.getName())) {
                 notes.remove(note);
@@ -207,14 +211,17 @@ public class Notes {
     }
 
     /**
-     * Affiche l'ensemble du nom et annotation des fichier/dossier de l'instance.
+     * Affiche l'ensemble du nom et annotation
+     * des fichier/dossier de l'instance.
      */
     public void displayNotes() {
         if (notes == null) {
             return;
         }
         for (Note note: notes) {
-            System.out.println("nom : " + note.getName() + " annotation : " + note.getAnnotation());
+            System.out.println("nom : " + note.getName()
+                                        + " annotation : "
+                                        + note.getAnnotation());
         }
     }
 }
@@ -238,7 +245,7 @@ class Note {
      * @param nameTmp Nom du fichier/dossier.
      * @param annotationTmp Annotation du fichier/dossier.
      */
-    public Note(String nameTmp, String annotationTmp) {
+    public Note(final String nameTmp, final String annotationTmp) {
         this.name = nameTmp;
         this.annotation = annotationTmp;
     }
@@ -259,14 +266,16 @@ class Note {
     }
     /**
      * Modifie l'annotation.
+     * @param annotation nouvelle annotation.
      */
-    public void setAnnotation(String annotation) {
+    public void setAnnotation(final String annotation) {
         this.annotation = annotation;
     }
     /**
      * Modifie le nom.
+     * @param name
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

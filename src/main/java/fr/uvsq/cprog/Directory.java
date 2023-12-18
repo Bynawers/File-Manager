@@ -19,7 +19,8 @@ public class Directory extends ElementRepertory {
      * @param nerTmp The number of the directory.
      * @param pathTmp The path of the directory.
      */
-    public Directory(final String nameTmp, final int nerTmp, final String pathTmp) {
+    public Directory(final String nameTmp, final int nerTmp,
+                        final String pathTmp) {
         super(nameTmp, nerTmp, pathTmp);
     }
 
@@ -49,9 +50,14 @@ public class Directory extends ElementRepertory {
 
     /**
      * Affiche tous les éléments de currentRepertoryElements dans l'interface.
+     *
+     * @param currentRepertoryElements Les éléments actuels du répertoire.
      */
-    public void displayElementsRepertory(Map<String, ElementRepertory> currentRepertoryElements) {
-        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+    public void displayElementsRepertory(
+                final Map<String, ElementRepertory> currentRepertoryElements) {
+
+        for (Map.Entry<String, ElementRepertory>
+                entry : currentRepertoryElements.entrySet()) {
             ElementRepertory element = entry.getValue();
             if (element.isDirectory()) {
                 System.out.print("[" + element.getNer() + "] ");
@@ -61,7 +67,8 @@ public class Directory extends ElementRepertory {
                     .a(element.getName())
                     .reset());
             } else {
-                System.out.println("[" + element.getNer() + "] " + element.getName());
+                System.out.println("[" + element.getNer()
+                                       + "] " + element.getName());
             }
         }
     }
@@ -70,7 +77,7 @@ public class Directory extends ElementRepertory {
      * Crée un nouveau dossier à partir du path.
      * @param path Chemin d'accès où créer le nouveau dossier.
      */
-    public void createDirectory(String path) {
+    public void createDirectory(final String path) {
         try {
             String newPath = path + "/" + this.getName();
             Path pathRef = Paths.get(newPath);
@@ -87,22 +94,25 @@ public class Directory extends ElementRepertory {
     /**
      * Find a specific file from its name recursively.
      * @param name The name of the file to find.
+     * @param path Le chemin d'accès pour la recherche du fichier.
      */
-    public void findRecursive(final String name, String path) {
+    public void findRecursive(final String name, final String path) {
         File directory = new File(this.getPath().replaceFirst("^\\./", ""));
         searchFile(directory, name, path);
     }
-    
+
     /**
      * Recherche un fichier à partir de son nom, récursivement
      * dans un dossier ainsi que ses sous dossier.
      * @param directory Le dossier racine de la recherche.
      * @param name Le nom du fichier à trouver.
-     * @param path Le chemin d'accès qui sera affichier si le fichier est trouvé.
+     * @param path Le chemin d'accès qui sera
+     * affichier si le fichier est trouvé.
      */
-    private void searchFile(File directory, String name, String path) {
+    private void searchFile(final File directory,
+                                final String name, final String path) {
         File[] directoryChildrens = directory.listFiles();
-        
+
         if (directoryChildrens != null) {
             for (File file : directoryChildrens) {
                 Boolean isDirectory = file.isDirectory();
@@ -111,7 +121,9 @@ public class Directory extends ElementRepertory {
                     searchFile(file, name, newPath);
                 }
                 if (file.getName().equals(name)) {
-                    System.out.println("Le fichier " + file.getName() + " a été trouvé dans le dossier " + path);
+                    System.out.println("Le fichier "
+                        + file.getName() + " a été trouvé dans le dossier "
+                        + path);
                 }
 
             }

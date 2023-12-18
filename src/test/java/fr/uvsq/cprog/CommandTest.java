@@ -42,7 +42,7 @@ public class CommandTest {
         System.setOut(new PrintStream(outContent));
 
 
-        lsCommand.currentRepertoryElements = currentRepertoryElements;
+        lsCommand.setCurrentRepertoryElements(currentRepertoryElements);
         
         String name = lsCommand.getName();
         lsCommand.execute();
@@ -76,10 +76,11 @@ public class CommandTest {
         System.setOut(new PrintStream(outputStream));
     
         VisuCommand visuCommand = new VisuCommand();
-        visuCommand.currentRepertoryElements = new HashMap<>();
+        Map<String, ElementRepertory> repertoryElements = new HashMap<>();
         FileRef file = new FileRef(tempFile.getName(), 1, tempFile.getAbsolutePath());
-        visuCommand.currentRepertoryElements.put(tempFile.getName(), file);
-        visuCommand.ner = 1;
+        repertoryElements.put(tempFile.getName(), file);
+        visuCommand.setCurrentRepertoryElements(repertoryElements);
+        visuCommand.setNer(1);
 
         String name = visuCommand.getName(); 
         visuCommand.execute();
@@ -151,16 +152,17 @@ public class CommandTest {
     @Test
     public void testCopyValidElement() {
         CopyCommand command = new CopyCommand();
-        command.currentRepertoryElements = new HashMap<>();
+        Map<String, ElementRepertory> repertoryElements = new HashMap<>();
 
         ElementRepertory copyFile = new FileRef("file1.txt", 1, "/path/file1.txt");
-        command.currentRepertoryElements.put("file1.txt", copyFile);
+        repertoryElements.put("file1.txt", copyFile);
+        command.setCurrentRepertoryElements(repertoryElements);
 
-        command.ner = 1;
+        command.setNer(1);
         command.execute();
         assertEquals(command.getName(), "copy");
-        assertNotNull(command.copy);
-        assertEquals(copyFile, command.copy);
+        assertNotNull(command.getCopy());
+        assertEquals(copyFile, command.getCopy());
     }
 
     @Test
@@ -185,16 +187,17 @@ public class CommandTest {
     @Test
     public void testAnnotateCommand() {
         AnnotateCommand command = new AnnotateCommand();
-        command.currentRepertoryElements = new HashMap<>();
+        Map<String, ElementRepertory> repertoryElements = new HashMap<>();
         File[] fileTab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
 
         Notes notes = new Notes(fileTab, "/path");
     
-        command.currentRepertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "/path/file1.txt"));
-        command.currentRepertoryElements.put("file2.txt", new FileRef("file2.txt", 0, "/path/file2.txt"));
+        repertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "/path/file1.txt"));
+        repertoryElements.put("file2.txt", new FileRef("file2.txt", 0, "/path/file2.txt"));
+        command.setCurrentRepertoryElements(repertoryElements);
 
-        command.notes = notes;
-        command.ner = 0;
+        command.setNotes(notes);
+        command.setNer(0);
         command.setArgs("Annotation pour file1.txt");
         command.execute();
 
@@ -208,7 +211,7 @@ public class CommandTest {
     @Test
     public void testDesannotateCommand() {
         DesannotateCommand command = new DesannotateCommand();
-        command.currentRepertoryElements = new HashMap<>();
+        Map<String, ElementRepertory> repertoryElements = new HashMap<>();
         File[] fileTab = new File[]{new File("file1.txt")};
 
 
@@ -217,9 +220,10 @@ public class CommandTest {
 
 
         ElementRepertory element = new FileRef("file1.txt", 1, "/path/file1.txt");
-        command.currentRepertoryElements.put("file1.txt", element);
-        command.notes = notes;
-        command.ner = 1;
+        repertoryElements.put("file1.txt", element);
+        command.setCurrentRepertoryElements(repertoryElements);
+        command.setNotes(notes);
+        command.setNer(1);
 
         command.execute(); //on supprime l'annotation
 
@@ -230,19 +234,24 @@ public class CommandTest {
 
     @Test
     public void testCutCommand() throws IOException {
-              
+
         Path tempFile = Files.createTempFile("testFile", ".txt"); // On Créer un fichier temporaire
 
         CutCommand command = new CutCommand();
-        command.currentRepertoryElements = new HashMap<>();
 
+        // Initialisation d'une nouvelle Map pour currentRepertoryElements
+        Map<String, ElementRepertory> repertoryElements = new HashMap<>();
         ElementRepertory fileToCut = new FileRef(tempFile.getFileName().toString(), 1, tempFile.toString());
-        command.currentRepertoryElements.put(tempFile.getFileName().toString(), fileToCut);
-        command.ner = 1;
 
+        repertoryElements.put(tempFile.getFileName().toString(), fileToCut);
+        
+        command.setCurrentRepertoryElements(repertoryElements);
+    
+        command.setNer(1);
         assertTrue(Files.exists(tempFile)); // on verifie que le fichier existe
 
         command.execute();
+
         assertFalse(Files.exists(tempFile)); // on verifie que le fichier a ete supprimé
         assertEquals(command.getName(), "cut");
     }
@@ -254,11 +263,12 @@ public class CommandTest {
 
         PastCommand command = new PastCommand(); 
         ElementRepertory Copyfile = new FileRef(tempFile.getFileName().toString(), 1, tempFile.toString()); // une instance de FileRef pour le fichier a copier
-        command.copy = Copyfile; //copie 
+        command.setCopy(Copyfile); //copie 
         
         command.execute(); // past
 
-        Path targetPath = tempFile.getParent().resolve(command.copy.getNameCopy()); // path du nouveau fichier
+        String copyFileName = Copyfile.getNameCopy();
+        Path targetPath = Paths.get(tempFile.getParent().toString(), copyFileName); // path du nouveau fichier
         assertTrue(Files.exists(targetPath));
 
         assertEquals(command.getName(), "past");
@@ -269,7 +279,7 @@ public class CommandTest {
     public void testPastNULLCommand() throws IOException {
         ElementRepertory Copyfile = null;
         PastCommand command = new PastCommand(); 
-        command.copy = Copyfile; //copie NULL 
+        command.setCopy(Copyfile); //copie NULL 
         command.execute(); // past
     }
 
@@ -277,7 +287,7 @@ public class CommandTest {
     public void testPastErrCommand() throws IOException {
         ElementRepertory Copyfile = null;
         PastCommand command = new PastCommand(); 
-        command.copy = Copyfile; //copie NULL 
+        command.setCopy(Copyfile);
         command.execute(); // past
     }
     
