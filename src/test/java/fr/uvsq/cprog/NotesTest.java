@@ -3,6 +3,8 @@ package fr.uvsq.cprog;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -19,23 +21,16 @@ import com.google.gson.GsonBuilder;
 
 public class NotesTest {
     
-    /* TODO new Notes prends en argument un tableau de File[]
+    // TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testSetPath() {
-        List<Note> expectedNotes = new ArrayList<>();
-        
-        expectedNotes.add(new Note("file1", "Annotation 1"));
-        expectedNotes.add(new Note("file2", "Annotation 2"));
-        Notes notes = new Notes(expectedNotes , "");
-        String addAnnotation = " suite annotation";
-        String expectedAnnotation = "Annotation 1"+" suite annotation";
-        
-        notes.setPath("/folder/file.txt");
-        assertEquals("/folder/file.txt", notes.getPath());
-
-        notes.addAnnotation(addAnnotation, "file1");
-        assertEquals(expectedAnnotation, expectedNotes.get(0).getAnnotation());
-    } */
+        Notes notes = new Notes(new File[]{}, "");
+    
+        String expectedPath = "/Dir/file.txt";
+        notes.setPath(expectedPath);
+    
+        assertEquals(expectedPath, notes.getPath());
+    }
 
     @Test
     public void testGetPath() {
@@ -59,47 +54,21 @@ public class NotesTest {
         assertEquals(3, res.size());
         assertEquals("", notes.getPath());
     }
-    /* TODO new Notes prends en argument un tableau de File[]
+    // TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testSetNotes() {
+
         File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
-        List<Note> expectedNotes = new ArrayList<>();
-        Notes notes = new Notes(expectedNotes, "path");
-        List<Note> result3 = notes.setNotes(filetab);
+        Notes notes = new Notes(new File[]{}, "path");
 
-        assertEquals("file1.txt", result3.get(0).getName());
-        assertEquals("file3.txt", result3.get(2).getName());
-        assertEquals("", result3.get(2).getAnnotation());
+        List<Note> result = notes.setNotes(filetab);
+
+        assertEquals(3, result.size());
+        assertEquals("file1.txt", result.get(0).getName());
     }
-    */
-    /* TODO new Notes prends en argument un tableau de File[]
-    @Test 
-    public void testCreateFile() throws IOException {
-        List<Note> notes = new ArrayList<>();
-        notes.add(new Note("Note 1", "Annotation 1"));
-        notes.add(new Note("Note 2", "Annotation 2"));
-        String path = "test.json";
-        Notes testNotes = new Notes(notes, path);
-        testNotes.createFile();
-        File file = new File(path);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            StringBuilder content = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                content.append(line);
-            }
-            String actualJson = content.toString().replaceAll("\\s", "");
+    
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String expectedJson = gson.toJson(notes).replaceAll("\\s", "");
-
-            assertEquals(expectedJson, actualJson);
-        } finally {
-            file.delete();
-        }
-    } */
-
-    /* TODO new Notes prends en argument un tableau de File[]
+    //TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testReadNote() throws IOException {
         String jsonContent = "[{\"name\":\"file1.txt\",\"annotation\":\"Annotation1\"}," +
@@ -108,8 +77,7 @@ public class NotesTest {
         Path jsonFile = Files.createTempFile("notes", ".json");
         Files.write(jsonFile, jsonContent.getBytes());
 
-        List<Note> emptyNotesList = new ArrayList<>();
-        Notes notes = new Notes(emptyNotesList, jsonFile.toString());
+        Notes notes = new Notes(new File[]{}, jsonFile.toString());
 
         notes.readNote();
 
@@ -119,38 +87,135 @@ public class NotesTest {
         assertEquals("Annotation2", loadedNotes.get(1).getAnnotation());
 
         Files.deleteIfExists(jsonFile);
-    } */
+    } 
     
-    /* TODO new Notes prends en argument un tableau de File[]
+    //TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testDeleteAnnotation() {
-        List<Note> notes = new ArrayList<>();
-        notes.add(new Note("file 1", "Annotation 1"));
-        notes.add(new Note("file 2", "Annotation 2"));
-        Notes testNotes = new Notes(notes,"");
+        File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
+        Notes testNotes = new Notes(filetab, "");
 
-        assertEquals("Annotation 1", notes.get(0).getAnnotation());
-        testNotes.deleteAnnotation("file 1");
-        assertEquals("", notes.get(0).getAnnotation());
-        assertEquals("Annotation 2", notes.get(1).getAnnotation());
-    }*/
+        testNotes.addAnnotation("Anno1", "file1.txt");
+        testNotes.addAnnotation("Anno2", "file2.txt");
 
-    /* TODO new Notes prends en argument un tableau de File[]
+        assertEquals("Anno1", testNotes.getAnnotation("file1.txt"));
+        testNotes.deleteAnnotation("file1.txt");
+        assertEquals("", testNotes.getAnnotation("file1.txt"));
+        assertEquals("Anno2", testNotes.getAnnotation("file2.txt"));
+    }
+
+    // TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testDisplayNotes() {
-        List<Note> notes = new ArrayList<>();
+        File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt")};
+        Notes testNotes = new Notes(filetab, "");
 
-        notes.add(new Note("file 1", "Annotation 1"));
-        notes.add(new Note("file 2", "Annotation 2"));
-        Notes testNotes = new Notes(notes,"");
+        testNotes.addAnnotation("Anno1", "file1.txt");
+        testNotes.addAnnotation("Anno2", "file2.txt");
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
         testNotes.displayNotes();
 
-        String expectedOutput = "nom : file 1 annotation :\nnom : file 2 annotation :\n";
+        String expectedOutput = "nom : file1.txt annotation : Anno1\nnom : file2.txt annotation : Anno2\n";
         assertEquals(expectedOutput, outputStream.toString());
         System.setOut(System.out);
-    } */
+    }
+
+    @Test
+    public void testAddNote() {
+        File[] filetab = new File[]{};
+        Notes notes = new Notes(filetab, "path");
+        String FileName = "file1.txt";
+        String newFileName = "file2.txt";
+        notes.addNote(FileName);
+        notes.addNote(newFileName);
+        // Vérifier que la note a été ajoutée
+        boolean noteFound = false;
+        for (Note note : notes.getNotes()) {
+            if (note.getName().equals(FileName) && note.getAnnotation().isEmpty()) {
+                noteFound = true;
+                break;
+            }
+        }
+        assertTrue(noteFound);
+    }
+
+    @Test
+    public void testdeleteNote() {
+        File[] filetab = new File[]{};
+        Notes notes = new Notes(filetab, "path");
+
+        notes.addNote("file1.txt");
+        notes.addNote("file2.txt");
+
+        // on supprime le fichier "file2.txt"
+        notes.deleteNote("file2.txt");
+
+        // Vérifier que le fichier "file2.txt" n'existe plus
+        List<Note> currentNotes = notes.getNotes();
+        boolean noteFound = false;
+        for (Note note : currentNotes) {
+            if (note.getName().equals("file2.txt")) {
+                noteFound = true;
+                break;
+            }
+        }
+        assertFalse(noteFound);
+    }
+
+    @Test
+    public void testCheckNotes() throws IOException {
+        Path tempDir = Files.createTempDirectory("testDir");
+        File tempFile1 = new File(tempDir.toFile(), "file1.txt");
+        File tempFile2 = new File(tempDir.toFile(), "file2.txt");
+        File tempFile3 = new File(tempDir.toFile(), "file3.txt");
+
+        tempFile1.createNewFile();
+        tempFile2.createNewFile();
+
+        File[] filetab = new File[]{tempFile1, tempFile2};
+        Notes notes = new Notes(filetab, tempDir.toString());
+
+        tempFile2.delete();
+
+        tempFile3.createNewFile();
+
+
+        File[] updatedFiles = new File[]{tempFile1, tempFile3};
+        notes.checkNotes(updatedFiles);
+
+
+        boolean foundFile1 = false;
+        for (Note note : notes.getNotes()) {
+            if ("file1.txt".equals(note.getName())) {
+                foundFile1 = true;
+                break;
+            }
+        }
+        assertTrue(foundFile1);
+
+        boolean foundFile2 = false;
+        for (Note note : notes.getNotes()) {
+            if ("file2.txt".equals(note.getName())) {
+                foundFile2 = true;
+                break;
+            }
+        }
+        assertFalse(foundFile2);
+        
+        boolean foundFile3 = false;
+        for (Note note : notes.getNotes()) {
+            if ("file3.txt".equals(note.getName())) {
+                foundFile3 = true;
+                break;
+            }
+        }
+        assertTrue(foundFile3);
+
+        tempFile1.delete();
+        tempFile3.delete();
+        Files.delete(tempDir);
+    }
 }

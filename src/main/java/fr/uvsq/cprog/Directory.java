@@ -41,12 +41,10 @@ public class Directory extends ElementRepertory {
     }
 
     /**
-     * Supprime récursivement le dossier ainsi que tous ses éléments.
+     * Pas utilisé.
      */
     @Override
-    public void delete() {
-        System.out.println("delete");
-    }
+    public void delete() { }
 
     /**
      * Affiche tous les éléments de currentRepertoryElements dans l'interface.

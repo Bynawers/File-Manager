@@ -114,7 +114,7 @@ class ExitCommand extends Command {
 }
 
 /**
- * Déplacement dans les fichier avec la commande cd, necessite un argument,
+ * Déplacement dans les dossier avec la commande cd, necessite un argument,
  * représentant le chemin à prendre.
  */
 class CdCommand extends Command {
@@ -170,9 +170,8 @@ class LsCommand extends Command {
     }
 }
 
-// TODO cut dossier.
 /**
- * Supprime un fichier/dossier à partir de son Ner,
+ * Supprime un fichier à partir de son Ner,
  * à l'aide de la commande cut.
  */
 class CutCommand extends Command {
@@ -193,9 +192,8 @@ class CutCommand extends Command {
     }
 }
 
-// TODO copie dossier.
 /**
- * Copie un fichier/dossier à partir
+ * Copie un fichier à partir
  * de son Ner à l'aide de la commande copy
  */
 class CopyCommand extends Command {
@@ -221,9 +219,8 @@ class CopyCommand extends Command {
     }
 }
 
-// TODO past dossier.
 /**
- * Créer un nouveau fichier/dossier identique au fichier/dossier
+ * Créer un nouveau fichier identique au fichier
  * copié à partir de son Ner, à l'aide de la commande past.
  */
 class PastCommand extends Command {
@@ -279,7 +276,6 @@ class VisuCommand extends Command {
     }
 }
 
-//TODO find dossier
 /**
  * Trouves fichier à partir de son nom à l'aide de la commande find.
  */
@@ -362,7 +358,7 @@ class HelpCommand extends Command {
         + "<NER> + <Annotation>         ajoute une annotation à un fichier\n"
         + "<NER> -                      supprime l'annotation du fichier\n"
         + "<NER> copy                   copie un fichier\n"
-        + "<NER> past                   créer un fichier à partir de la copie\n"
+        + "past                         créer un fichier à partir de la copie\n"
         + "ls                           affiche les éléments du dossier courant\n"
         + "cd <chemin>                  parcours le système de fichier";
         System.out.println(helpOutput);

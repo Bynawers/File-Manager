@@ -2,13 +2,18 @@ package fr.uvsq.cprog;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.jline.reader.Candidate;
+import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.ParsedLine;
+import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +25,7 @@ public class CommandLine {
     /* HashMap de toutes les commandes associés au nom de la commande */
     private final Map<String, Command> commands = new HashMap<>();
     /* HashMap de tous les éléments associés à leur nom */
-    private Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
+    private static Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
     /* Instance de la commande */
     private static Command command;
     /* Path courant du programme */
@@ -76,7 +81,10 @@ public class CommandLine {
 
         Terminal terminal = TerminalBuilder.builder().build();
         LineReader lineReader = LineReaderBuilder
-            .builder().terminal(terminal).build();
+            .builder()
+            .terminal(terminal)
+            .completer(new MultiCompleter())
+            .build();
 
         command = null;
         currentPath = System.getProperty("user.dir");
@@ -97,7 +105,7 @@ public class CommandLine {
             }
 
             displayInterface(currentPath);
-            String userInput = lineReader.readLine("> ");
+            String userInput = lineReader.readLine("prompt> ");
 
             String[] parsedLine = userInput.split("\\s+");
             parseUser(parsedLine);
@@ -140,7 +148,7 @@ public class CommandLine {
      * en les affectant dans les bonnes variables.
      * @param parsedLine Le tableau d'entrée de l'utilisateur.
      */
-    private void parseUser(String[] parsedLine) {
+    public void parseUser(String[] parsedLine) {
         currentNer = parsedLine.length > 0
             ? isInteger(parsedLine[0])
             ? Integer.parseInt(parsedLine[0])
@@ -167,19 +175,20 @@ public class CommandLine {
      * @param command L'instance Command de la commande executé.
      * @return La nouvelle instance Notes modifées.
      */
-    private Notes modifyNotes(Notes currentNotes, Command command) {
+    public Notes modifyNotes(Notes currentNotes, Command command) {
         String cmdName = command.getName();
         String nameFile = "";
 
-        if (cmdName.equals("mkdir")) {
+        if (cmdName.equals("mkdir") && command.args != null) {
             nameFile = command.args;
             currentNotes.addNote(nameFile);
 
         } else if (cmdName.equals("past")) {
+            
             nameFile = command.copy.getNameCopy();
             currentNotes.addNote(nameFile);
 
-        } else if (cmdName.equals("cut")) {
+        } else if (cmdName.equals("cut") && command.ner != -1) {
             nameFile = command.copy.getName();
             currentNotes.deleteNote(nameFile);
         }
@@ -196,26 +205,28 @@ public class CommandLine {
      */
     private void displayInterface(String path) {
         Directory currentDirectory = new Directory(path, 0, "");
+        String currentString = currentNer != -1 ? "[" + currentNer + "] "+ currentAnnotation : "";
 
         AnsiConsole.out()
-            .print(Ansi.ansi()
+            .println(Ansi.ansi()
             .fg(Ansi.Color.GREEN)
             .a(path + " ")
             .reset());
 
         AnsiConsole.out()
             .println(Ansi.ansi()
-            .fg(Ansi.Color.YELLOW)
-            .a(currentAnnotation)
+            .fg(Ansi.Color.BLUE)
+            .a("Fichier courant : " + currentString)
             .reset());
 
         currentDirectory.displayElementsRepertory(currentRepertoryElements);
 
+        /*
         AnsiConsole.out()
             .print(Ansi.ansi()
             .fg(Ansi.Color.GREEN)
             .a("[" + currentDirectory.lastName(path) + "]$ ")
-            .reset());
+            .reset());*/
     }
 
     /**
@@ -288,7 +299,7 @@ public class CommandLine {
      * Obtiens l'instance d'un élément à partir de son Ner. 
      * @return L'élément associé au Ner de la commande.
      */
-    public ElementRepertory getElementByNer(int ner) {
+    public static ElementRepertory getElementByNer(int ner) {
         for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
             ElementRepertory element = entry.getValue();
             if (element.getNer() == ner) {
@@ -318,4 +329,94 @@ public class CommandLine {
     public boolean containsCommand(String commandName) {
         return commands.containsKey(commandName);
     }
+
+    public String getCurrentName() {
+        return currentName;
+    }
+
+    public String getCurrentArgs() {
+        return currentArgs;
+    }
+
+
+    /**
+     * Class permettant l'auto-complétion des mots, utilisant Jline.
+    */
+    static class MultiCompleter implements Completer {
+        /**
+         * fonction principale analysant l'entrée de l'utilisateur afin de redirgier vers l'auto-compléteur,
+         * le plus pertinent.
+         */
+        @Override
+        public void complete(LineReader reader, ParsedLine line, java.util.List<Candidate> candidates) {
+            int wordCount = line.wordIndex() + 1;
+
+            String[] parsedLine = line.line().split("\\s+");
+            String tmpCommandName = "";
+            int tmpCommandNer = -1;
+            Boolean hasNer = false;
+
+            if (wordCount > 0) {
+                tmpCommandName = parsedLine[0];
+                hasNer = isInteger(parsedLine[0]);
+                tmpCommandNer = hasNer ? Integer.parseInt(parsedLine[0]) : -1;
+            }
+
+            if (wordCount == 1) {
+                completeCommand(line, candidates, currentNer);
+            } else if (wordCount == 2 && tmpCommandName.equals("cd")) {
+                completeFolderName(line, candidates);
+            } else if (wordCount == 2 && hasNer) {
+                completeCommand(line, candidates, tmpCommandNer);
+            }
+        }
+
+        /**
+         * Auto-compléteur des commandes, n'affiche seulement les commandes possible pour l'utilisateur,
+         * en fonction de ce qu'il a entrée et de l'élément courant
+         */
+        private void completeCommand(ParsedLine line, java.util.List<Candidate> candidates, int ner) {
+            Boolean isDirectory = false;
+
+            ElementRepertory element = getElementByNer(ner);
+            if (element != null) {
+                isDirectory = element.isDirectory();
+            }
+
+            if (command != null ? command.copy != null : false) {
+                candidates.add(new Candidate("past"));
+            }
+            if (ner == -1) {
+                candidates.add(new Candidate("exit"));
+                candidates.add(new Candidate("help"));
+                candidates.add(new Candidate("cd"));
+                candidates.add(new Candidate("ls"));
+            }
+            else {
+                if (!isDirectory) {
+                    candidates.add(new Candidate("visu"));
+                    candidates.add(new Candidate("copy"));
+                }
+                candidates.add(new Candidate("-"));
+                candidates.add(new Candidate("+"));
+                
+            }
+        }
+
+        /**
+         * Auto-compléteur des dossiers, permettant de se déplacer plus rapidement avec cd.
+         */
+        private void completeFolderName(ParsedLine line, java.util.List<Candidate> candidates) {
+            for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+                String fileName = entry.getKey();
+                ElementRepertory element = entry.getValue();
+            
+                if (element.isDirectory()) {
+                    candidates.add(new Candidate(fileName));
+                }
+            }
+            candidates.add(new Candidate("../"));
+        }
+    }
+    
 }

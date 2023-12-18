@@ -55,7 +55,7 @@ public class Notes {
      * Crée une Liste de Note à partir d'un tableau de fichier/dossier.
      * @return une liste de notes.
      */
-    private List<Note> setNotes(File[] fileList) {
+    public List<Note> setNotes(File[] fileList) {
         List<Note> notes = new ArrayList<>();
         if (fileList == null) {
             return notes;

@@ -21,13 +21,13 @@ public class AppTest
 
         thread.start();
 
-        // Attendez un peu pour laisser la méthode `main` démarrer
+        // attente que le main demarre
         Thread.sleep(1000);
 
-        // Interrompre le thread pour terminer `main`
+        // arreter le thread
         thread.interrupt();
 
-        // Attendez que le thread se termine
+        // attentde que le thread soit terminé
         thread.join(1000);
 
         // Vérifier que le thread est terminé
@@ -35,11 +35,4 @@ public class AppTest
 
         System.setOut(originalOut);
     }
-    
-
 }
-
-
-
-
-
