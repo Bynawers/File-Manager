@@ -1,4 +1,55 @@
-[ERROR] src/main/java/fr/uvsq/cprog/App.java:[1] (javadoc) JavadocPackage: Missing package-info.java file.
-[ERROR] src/main/java/fr/uvsq/cprog/App.java:[7,1] (design) HideUtilityClassConstructor: Utility classes should not have a public or default constructor.
-[ERROR] src/main/java/fr/uvsq/cprog/App.java:[8,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
-[ERROR] src/main/java/fr/uvsq/cprog/App.java:[8,29] (misc) FinalParameters: Parameter args should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/FileRef.java:[94,13] (blocks) RightCurly: '}' at column 13 should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else, do/while or try/catch/finally).
+[ERROR] src/main/java/fr/uvsq/cprog/FileRef.java:[101,16] (blocks) EmptyBlock: Must have at least one statement.
+
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[215,30] (misc) FinalParameters: Parameter message should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[309,20] (blocks) EmptyBlock: Must have at least one statement.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[315] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[316] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[317] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[320,52] (misc) FinalParameters: Parameter ner should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[320,56] (javadoc) JavadocMethod: Expected @param tag for 'ner'.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[321] (sizes) LineLength: Line is longer than 80 characters (found 95).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[374] (sizes) LineLength: Line is longer than 80 characters (found 108).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[378] (sizes) LineLength: Line is longer than 80 characters (found 104).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[378,30] (misc) FinalParameters: Parameter reader should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[378,49] (misc) FinalParameters: Parameter line should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[378,66] (misc) FinalParameters: Parameter candidates should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[401] (javadoc) JavadocStyle: First sentence should end with a period.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[402] (sizes) LineLength: Line is longer than 80 characters (found 104).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405] (sizes) LineLength: Line is longer than 80 characters (found 102).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405,38] (misc) FinalParameters: Parameter line should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405,49] (javadoc) JavadocMethod: Expected @param tag for 'line'.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405,55] (misc) FinalParameters: Parameter candidates should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405,81] (javadoc) JavadocMethod: Expected @param tag for 'candidates'.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405,93] (misc) FinalParameters: Parameter ner should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[405,97] (javadoc) JavadocMethod: Expected @param tag for 'ner'.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[425,13] (blocks) RightCurly: '}' at column 13 should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else, do/while or try/catch/finally).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[445] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[450] (sizes) LineLength: Line is longer than 80 characters (found 91).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[452] (sizes) LineLength: Line is longer than 80 characters (found 96).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[452,41] (misc) FinalParameters: Parameter line should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[452,52] (javadoc) JavadocMethod: Expected @param tag for 'line'.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[452,58] (misc) FinalParameters: Parameter candidates should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[452,84] (javadoc) JavadocMethod: Expected @param tag for 'candidates'.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[453] (sizes) LineLength: Line is longer than 80 characters (found 99).
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[456] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/CommandLine.java:[464] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[4,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[8,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[8,33] (misc) FinalParameters: Parameter message should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[12,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[12,33] (misc) FinalParameters: Parameter message should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[12,49] (misc) FinalParameters: Parameter cause should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[16,5] (javadoc) MissingJavadocMethod: Missing a Javadoc comment.
+[ERROR] src/main/java/fr/uvsq/cprog/FileManagerException.java:[16,33] (misc) FinalParameters: Parameter cause should be final.
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[1] (misc) NewlineAtEndOfFile: File does not end with a newline.
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[293] (javadoc) JavadocStyle: First sentence should end with a period.
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[331,54] (whitespace) WhitespaceAround: '{' is not preceded with whitespace.
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[373,9] (blocks) RightCurly: '}' at column 9 should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else, do/while or try/catch/finally).
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[417,9] (blocks) RightCurly: '}' at column 9 should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else, do/while or try/catch/finally).
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[420,9] (blocks) RightCurly: '}' at column 9 should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else, do/while or try/catch/finally).
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[446,9] (blocks) RightCurly: '}' at column 9 should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else, do/while or try/catch/finally).
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[468] (regexp) RegexpSingleline: Line has trailing spaces.
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[477] (sizes) LineLength: Line is longer than 80 characters (found 82).
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[479] (sizes) LineLength: Line is longer than 80 characters (found 83).
+[ERROR] src/main/java/fr/uvsq/cprog/Command.java:[481] (sizes) LineLength: Line is longer than 80 characters (found 85).

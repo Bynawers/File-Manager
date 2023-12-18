@@ -22,10 +22,11 @@ import java.util.Map;
 public class CommandLine {
     /** HashMap de toutes les commandes associés au nom de la commande. */
     private final Map<String, Command> commands = new HashMap<>();
-    /* HashMap de tous les éléments associés à leur nom */
+    /** HashMap de tous les éléments associés à leur nom */
     private static Map<String, ElementRepertory>
-        currentRepertoryElements = new HashMap<>();
-    /* Instance de la commande */
+    /** Element courant du répertoire */
+    currentRepertoryElements = new HashMap<>();
+    /** Instance de la commande */
     private static Command command;
     /** Path courant du programme. */
     private static String currentPath;
@@ -41,7 +42,7 @@ public class CommandLine {
     private static Notes currentNotes;
     /** Ner de la commande. */
     private static int currentNer;
-    /* Erreur de la commande */
+    /** Erreur de la commande */
     private static String currentError;
 
     /**
@@ -135,7 +136,7 @@ public class CommandLine {
 
                 try {
                     command.execute();
-                } catch(FileManagerException e) {
+                } catch (FileManagerException e) {
                     currentError = e.getMessage();
                 }
 
@@ -148,7 +149,9 @@ public class CommandLine {
             }
 
             ElementRepertory currentFile = getElementByNer(currentNer);
-            currentAnnotation = currentFile != null ? currentNotes.getAnnotation(currentFile.getName()) : "";
+            currentAnnotation = currentFile != null
+                ? currentNotes.getAnnotation(currentFile.getName())
+                : "";
         }
     }
 
@@ -197,7 +200,10 @@ public class CommandLine {
             nameFile = command.getCopy().getNameCopy();
             currentNotesTemp.addNote(nameFile);
 
-        } else if (cmdName.equals("cut") && command.getNer() != -1 && command.getCopy() != null) {
+        } else if (
+            cmdName.equals("cut") &&
+            command.getNer() != -1 && command.getCopy() != null
+        ) {
             nameFile = command.getCopy().getName();
             currentNotesTemp.deleteNote(nameFile);
         } else if (cmdName.equals("cd") || cmdName.equals("..") || cmdName.equals(".")) {
@@ -218,7 +224,7 @@ public class CommandLine {
         AnsiConsole.out()
             .println(Ansi.ansi()
             .fg(Ansi.Color.YELLOW)
-            .a("[WARNING] "+message)
+            .a("[WARNING] " + message)
             .reset());
     }
 
@@ -229,7 +235,8 @@ public class CommandLine {
      */
     private void displayInterface(final String path) {
         Directory currentDirectory = new Directory(path, 0, "");
-        String currentString = currentNer != -1 ? "[" + currentNer + "] "+ currentAnnotation : "";
+        String currentString = currentNer != -1
+            ? "[" + currentNer + "] " + currentAnnotation : "";
 
         AnsiConsole.out()
             .println(Ansi.ansi()
@@ -306,18 +313,19 @@ public class CommandLine {
                 currentRepertoryElements.put(file.getName(),
                                 new FileRef(file.getName(), ner, newPath));
             } else {
-                //exception
             }
             ner++;
         }
     }
-    
-    /** 
-     * Obtiens l'instance d'un élément à partir de son Ner. 
+
+    /**
+     * Obtiens l'instance d'un élément à partir de son Ner.
+     * @param ner Le ner de l'élément.
      * @return L'élément associé au Ner de la commande.
      */
     public static ElementRepertory getElementByNer(int ner) {
-        for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
+        for (Map.Entry<String, ElementRepertory> entry
+                : currentRepertoryElements.entrySet()) {
             ElementRepertory element = entry.getValue();
             if (element.getNer() == ner) {
                 return element;
@@ -370,11 +378,15 @@ public class CommandLine {
     */
     static class MultiCompleter implements Completer {
         /**
-         * fonction principale analysant l'entrée de l'utilisateur afin de redirgier vers l'auto-compléteur,
-         * le plus pertinent.
+         * fonction principale analysant l'entrée de l'utilisateur
+         * afin de redirgier vers l'auto-compléteur le plus pertinent.
          */
         @Override
-        public void complete(LineReader reader, ParsedLine line, java.util.List<Candidate> candidates) {
+        public void complete(
+            LineReader reader,
+            ParsedLine line,
+            java.util.List<Candidate> candidates
+        ) {
             int wordCount = line.wordIndex() + 1;
 
             String[] parsedLine = line.line().split("\\s+");
@@ -399,7 +411,7 @@ public class CommandLine {
 
         /**
          * Auto-compléteur des commandes, n'affiche seulement les commandes possible pour l'utilisateur,
-         * en fonction de ce qu'il a entrée et de l'élément courant
+         * en fonction de ce qu'il a entrée et de l'élément courant.
          */
         private void completeCommand(ParsedLine line, java.util.List<Candidate> candidates, int ner) {
             int wordCount = line.wordIndex() + 1;
