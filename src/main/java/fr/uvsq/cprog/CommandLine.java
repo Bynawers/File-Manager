@@ -7,13 +7,11 @@ import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
-import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +40,8 @@ public class CommandLine {
     private static Notes currentNotes;
     /* Ner de la commande */
     private static int currentNer;
+    /* Erreur de la commande */
+    private static String currentError;
 
     /**
      * Initialisation de la HashMap commands stockant toutes les commandes.
@@ -94,6 +94,7 @@ public class CommandLine {
         currentName = null;
         currentAnnotation = "";
         currentArgs = "";
+        currentError = "";
 
         currentNotes = generateNotesFile(currentPath);
         generateInstancesRepertory(currentPath);
@@ -103,8 +104,9 @@ public class CommandLine {
             if (command != null) {
                 currentPath = command.getPath();
             }
-
             displayInterface(currentPath);
+            displayError(currentError);
+            currentError = "";
             String userInput = lineReader.readLine("prompt> ");
 
             String[] parsedLine = userInput.split("\\s+");
@@ -127,7 +129,11 @@ public class CommandLine {
                 }
                 command.currentRepertoryElements = currentRepertoryElements;
 
-                command.execute();
+                try {
+                    command.execute();
+                } catch(FileManagerException e) {
+                    currentError = e.getMessage();
+                }
 
                 currentNotes = modifyNotes(currentNotes, command);
 
@@ -183,12 +189,11 @@ public class CommandLine {
             nameFile = command.args;
             currentNotes.addNote(nameFile);
 
-        } else if (cmdName.equals("past")) {
-            
+        } else if (cmdName.equals("past") && command.copy != null) {
             nameFile = command.copy.getNameCopy();
             currentNotes.addNote(nameFile);
 
-        } else if (cmdName.equals("cut") && command.ner != -1) {
+        } else if (cmdName.equals("cut") && command.ner != -1 && command.copy != null) {
             nameFile = command.copy.getName();
             currentNotes.deleteNote(nameFile);
         }
@@ -196,6 +201,17 @@ public class CommandLine {
             currentNotes = generateNotesFile(command.getPath());
         }
         return currentNotes;
+    }
+
+    public void displayError(String message) {
+        if (message.equals("")) {
+            return;
+        }
+        AnsiConsole.out()
+            .println(Ansi.ansi()
+            .fg(Ansi.Color.YELLOW)
+            .a("[WARNING] "+message)
+            .reset());
     }
 
     /**
@@ -220,13 +236,6 @@ public class CommandLine {
             .reset());
 
         currentDirectory.displayElementsRepertory(currentRepertoryElements);
-
-        /*
-        AnsiConsole.out()
-            .print(Ansi.ansi()
-            .fg(Ansi.Color.GREEN)
-            .a("[" + currentDirectory.lastName(path) + "]$ ")
-            .reset());*/
     }
 
     /**
@@ -376,6 +385,7 @@ public class CommandLine {
          * en fonction de ce qu'il a entrée et de l'élément courant
          */
         private void completeCommand(ParsedLine line, java.util.List<Candidate> candidates, int ner) {
+            int wordCount = line.wordIndex() + 1;
             Boolean isDirectory = false;
 
             ElementRepertory element = getElementByNer(ner);
@@ -393,6 +403,12 @@ public class CommandLine {
                 candidates.add(new Candidate("ls"));
             }
             else {
+                if (wordCount < 2) {
+                    candidates.add(new Candidate("exit"));
+                    candidates.add(new Candidate("help"));
+                    candidates.add(new Candidate("cd"));
+                    candidates.add(new Candidate("ls"));
+                }
                 if (!isDirectory) {
                     candidates.add(new Candidate("visu"));
                     candidates.add(new Candidate("copy"));

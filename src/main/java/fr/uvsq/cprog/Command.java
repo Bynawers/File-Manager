@@ -36,7 +36,7 @@ abstract class Command {
     /** 
      * Fonction d'execution de la commande.
      */
-    abstract void execute();
+    abstract void execute() throws FileManagerException;
 
     /** 
      * Modifie le Path de la commande.
@@ -78,6 +78,7 @@ abstract class Command {
     }
 }
 
+
 /**
  * Créer un dossier à partir de la commande mkdir, necessite un argument
  * représentant le nom du dossier.
@@ -89,9 +90,9 @@ class CreateDirectoryCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         if (args == null) {
-            return;
+            throw new FileManagerException("Argument null");
         }
         Directory newDirectory = new Directory(args, 0, "");
         newDirectory.createDirectory(getPath());
@@ -124,9 +125,9 @@ class CdCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         if (args == null) {
-            return;
+            throw new FileManagerException("Argument null");
         }
 
         String newPath;
@@ -143,7 +144,7 @@ class CdCommand extends Command {
         if (Files.exists(pathRef) && Files.isDirectory(pathRef)) {
             setPath(newPath);
         } else {
-            // chemin introuvable
+            throw new FileManagerException("Path not find");
         }
     }
 }
@@ -159,12 +160,11 @@ class LsCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         Directory directory = new Directory("root", 0, "");
 
         if (!directory.isDirectory()) {
-            // pas un dossier
-            return;
+            throw new FileManagerException("Not a directory");
         }
         directory.displayElementsRepertory(currentRepertoryElements);
     }
@@ -181,12 +181,15 @@ class CutCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         if (this.ner == -1) {
-            return;
+            throw new FileManagerException("Please enter a ner");
         }
 
         ElementRepertory element = getElementByNer();
+        if (element == null) {
+            throw new FileManagerException("File not found");
+        }
         copy = element;
         element.delete();
     }
@@ -203,10 +206,9 @@ class CopyCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         if (this.ner == -1) {
-            // entrer un ner
-            return;
+            throw new FileManagerException("Please enter a ner");
         }
 
         for (Map.Entry<String, ElementRepertory> entry : currentRepertoryElements.entrySet()) {
@@ -230,9 +232,9 @@ class PastCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException{
         if (this.copy == null) {
-            return;
+            throw new FileManagerException("No copy found");
         }
         String copyPath = copy.parentPath(copy.getPath()) + "/" + copy.getNameCopy();
         Path sourcePath = Paths.get(copy.getPath());
@@ -241,13 +243,12 @@ class PastCommand extends Command {
         boolean existingFile = new File(copyPath).exists();
 
         if (existingFile) {
-            return;
+            throw new FileManagerException("Existing file found");
         }
 
         try {
             Files.copy(sourcePath, targetPath);
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
@@ -264,12 +265,18 @@ class VisuCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         if (ner == -1) {
-            return;
+            throw new FileManagerException("Please enter a ner");
         }
 
         ElementRepertory element = getElementByNer();
+        if (element == null) {
+            throw new FileManagerException("File not found");
+        }
+        else if (element.isDirectory()) {
+            throw new FileManagerException("Element is a directory");
+        }
 
         FileRef file = new FileRef("visu", 0, "");
         file.visualization(element.getPath());
@@ -286,9 +293,9 @@ class FindCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         if (args == null) {
-            return;
+            throw new FileManagerException("Argument null");
         }
         Directory currentDirectory = new Directory("root", 0, path);
         currentDirectory.findRecursive(args, path);
@@ -306,9 +313,15 @@ class AnnotateCommand extends Command {
     }
     
     @Override
-    public void execute() {
-        if (ner == -1 || args == null || notes == null) {
-            return;
+    public void execute() throws FileManagerException {
+        if (ner == -1) {
+            throw new FileManagerException("Please enter a ner");
+        }
+        else if (args == null) {
+            throw new FileManagerException("Argument null");
+        }
+        else if (notes == null) {
+            throw new FileManagerException("Notes not found");
         }
 
         ElementRepertory element = getElementByNer();
@@ -328,9 +341,12 @@ class DesannotateCommand extends Command {
     }
 
     @Override
-    public void execute() {
-        if (ner == -1 || notes == null) {
-            return;
+    public void execute() throws FileManagerException {
+        if (ner == -1) {
+            throw new FileManagerException("Please enter a ner");
+        }
+        else if (notes == null) {
+            throw new FileManagerException("Notes not found");
         }
         ElementRepertory element = getElementByNer();
         String name = element.getName();
@@ -349,7 +365,7 @@ class HelpCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FileManagerException {
         String helpOutput = "Listes des commandes :\n" 
         + "mkdir <nom_du_dossier>       créer un dossier\n"
         + "<NER> cut                    effacer un fichier\n"

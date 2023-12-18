@@ -84,7 +84,6 @@ public class FileRef extends ElementRepertory {
                 ImageIcon imageIcon = new ImageIcon(path);
                 JLabel label = new JLabel(imageIcon);
                 frame.getContentPane().add(label);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
