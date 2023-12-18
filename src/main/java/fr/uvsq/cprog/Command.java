@@ -181,6 +181,69 @@ class CdCommand extends Command {
 }
 
 /**
+ * Permet de retourner dans le dossier parent. (équivalent à cd ../)
+ */
+class BackCommand extends Command {
+    @Override
+    public String getName() {
+        return "..";
+    }
+
+    @Override
+    public void execute() throws FileManagerException {
+
+        String newPath;
+
+        Directory currentDirectory = new Directory(getPath(), 0, "");
+        newPath = currentDirectory.parentPath(getPath());
+
+        Path pathRef = Paths.get(newPath);
+
+        if (Files.exists(pathRef) && Files.isDirectory(pathRef)) {
+            setPath(newPath);
+        } else {
+            throw new FileManagerException("Path not find");
+        }
+    }
+}
+
+/**
+ * Déplacement dans les dossier avec la commande cd, necessite un argument,
+ * représentant le chemin à prendre.
+ */
+class GoToCommand extends Command {
+    @Override
+    public String getName() {
+        return ".";
+    }
+
+    @Override
+    public void execute() throws FileManagerException {
+        if (getNer() == -1) {
+            throw new FileManagerException("Please enter a ner");
+        }
+
+        ElementRepertory element = getElementByNer();
+        if (element == null) {
+            throw new FileManagerException("Ner not valid");
+        } else if (element.isFile()) {
+            throw new FileManagerException("Not a folder");
+        }
+
+        String newPath;
+        newPath = getPath() + "/" + element.getName();
+
+        Path pathRef = Paths.get(newPath);
+
+        if (Files.exists(pathRef) && Files.isDirectory(pathRef)) {
+            setPath(newPath);
+        } else {
+            throw new FileManagerException("Path not find");
+        }
+    }
+}
+
+/**
  * Affichage des éléments courants ainsi que leur Ner
  * à l'aide de la commande ls (développement seulement).
  */
@@ -412,7 +475,10 @@ class HelpCommand extends Command {
         + "<NER> copy                   copie un fichier\n"
         + "past                         créer un fichier à partir de la copie\n"
         + "ls                           affiche les éléments du dossier courant\n"
-        + "cd <chemin>                  parcours le système de fichier";
+        + "cd <chemin>                  parcours le système de fichier\n"
+        + "<NER> .                      se rendre vers le dossier associé au ner\n"
+        + "..                           retourne dans le dossier parent\n"
+        + "exit                         quitte l'execution de l'invite de commande.";
         System.out.println(helpOutput);
     }
 }

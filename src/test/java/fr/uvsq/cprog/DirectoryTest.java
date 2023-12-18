@@ -9,20 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-//import org.junit.Test;
-
 public class DirectoryTest {
-    /*
+    
     @Test
     public void testCreateDirectory() {
         Directory directory = new Directory("test", 0, "");
-        String path = System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog"; // TODO on garde ca ou on change?
+        String path = System.getProperty("user.dir") + "/src/main/java/fr/uvsq/cprog";
         String expectedPath = path + "/" + directory.getName();
 
         try {
@@ -36,12 +32,12 @@ public class DirectoryTest {
         } catch (IOException e) {
             fail("Erreur lors de la creation du dossier");
         }
-    }*/
-    /*
+    }
+
     @Test
     public void testdelete() {
         Directory directory = new Directory("test", 0, "");
-        String path = System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog"; // TODO on garde ca ou on change?
+        String path = System.getProperty("user.dir") + "/src/main/java/fr/uvsq/cprog";
         String expectedPath = path + "/" + directory.getName();
         try {
             directory.createDirectory(path);
@@ -56,22 +52,26 @@ public class DirectoryTest {
             fail("Erreur lors de la creation du dossier");
         }
     }
-*/
-    /*
+
     @Test
     public void testGetElementByNer() {
         Map<String, ElementRepertory> map = new HashMap<>();
-        Directory directory = new Directory("test", 0, "");
+        ExitCommand command = new ExitCommand();
+        command.setNer(1);
+        command.setCurrentRepertoryElements(map);
 
-        assertNull(directory.getElementByNer(map, 1));
+        assertNull(command.getElementByNer());
 
         ElementRepertory element1 = new FileRef( "file1.txt", 1, "");
         ElementRepertory element2 = new FileRef( "file2.txt", 2, "");
         map.put("file1.txt", element1);
         map.put("file2.txt", element2);
+        command.setCurrentRepertoryElements(map);
 
-        assertEquals(element1, directory.getElementByNer(map, 1));
-        assertEquals(element2, directory.getElementByNer(map, 2));
-    } */
+        command.setNer(1);
+        assertEquals(element1, command.getElementByNer());
+        command.setNer(2);
+        assertEquals(element2, command.getElementByNer());
+    }
     
 }

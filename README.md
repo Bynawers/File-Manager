@@ -84,9 +84,10 @@ Une auto-complétion (TAB) est disponible et permet de connaître les commandes 
 **Mises à jours du fichier des annotations à effectuer en fonction des types de commandes**
 mkdir / past : ajout d'une note
 cut : suppression d'une note 
+cd / .. / . : mise à jour de l'annotation courante.
 
 **Bibliothèques Java qui permette de prendre en charge la visualisation d'une image png si l'utilisateur veut l'afficher**
-Il existe plusieurs bibliothèque permettant cela, tel que JavaFx, AWT, Java ImageI/O, dans notre cas nous avons choisi Swing javax. 
+Il existe plusieurs bibliothèques permettant cela, tel que JavaFx, AWT, Java ImageI/O, dans notre cas nous avons choisi Swing javax. 
 
 **Quelles sont les commandes qui seraient utiles de rajouter ?**
 - **help** pour avoir une liste et une description de chaque commande avec leur utilisation.
@@ -97,24 +98,54 @@ L'implémentation de l'auto-complétion permet d'aider l'utilisateur à trouver 
 
 ## Manuel technique
 ### Compiler le projet
-##### Sous Linux
-```bash
-$ ./mvnw package
-```
 
-##### Sous Windows
+##### Sous Windows, Mac et Linux
 ```bash
-> mvnw.cmd package
+> ./mvnw clean package assembly:single
 ```
 
 ### Exécuter l'application
 ```bash
-$ java -jar target/explorer-1.0.jar
+$ java -jar target/explorer-1.0-jar-with-dependencies.jar
 ```
 
+### Liste des commandes prompt
+```bash
+$ prompt> help    # affiche la liste des commandes
+```
+```bash
+$ prompt> <NER> .    # se rendre vers le dossier associé au ner
+```
+```bash
+$ prompt> ..    # retourne dans le dossier parent
+```
+```bash
+$ prompt> mkdir <NOM_FICHIER>    # créer un nouveau dossier
+```
+```bash
+$ prompt> cd <CHEMIN>    # déplace vers le chemin
+```
+```bash
+$ prompt> ls    # affiche la liste des fichiers courant
+```
+```bash
+$ prompt> exit    # quitte l'execution de l'invite de commande.
+```
+```bash
+$ prompt> <NER> copy    # met en copie de fichier assoscié au ner.
+```
+```bash
+$ prompt> past    # créer un fichier de la copie.
+```
+```bash
+$ prompt> <NER> visu    # visualise le contenu d'un fichier.
+```
+```bash
+$ prompt> find <NOM_FICHIER>    # trouve le chemin du fichier dans le dossier ourant et ses enfants.
+```
 #### Rapport de couverture Jacoco
 Afin d'obtenir le rapport de couvertures des tests, 
-il faut se rendre dans le dossier target du projet, dedans se trouves le dossier repport contenant un fichier index.html, puis ouvrir ce fichier.
+il faut se rendre dans le dossier **target** du projet, dedans se trouve le dossier **reports** contenant un fichier index.html, puis ouvrir ce fichier.
 
 #### Bibliothèque utilisées
 Dans ce projet, nous avons utilisé les bibliothèques suivantes : 

@@ -60,6 +60,8 @@ public class CommandLine {
         addCommand(new AnnotateCommand());
         addCommand(new DesannotateCommand());
         addCommand(new HelpCommand());
+        addCommand(new BackCommand());
+        addCommand(new GoToCommand());
     }
 
     /**
@@ -73,10 +75,8 @@ public class CommandLine {
     }
 
     /**
-     * Starts the command line interface.
-     * Override this method in a subclass to customize the behavior.
-     *
-     * @throws IOException if an I/O error occurs
+     * Lance le gestionnaire de ligne de commande.
+     * @throws IOException si une exception se produit?
      */
     public void start() throws IOException {
 
@@ -112,6 +112,7 @@ public class CommandLine {
             currentError = "";
             String userInput = lineReader.readLine("prompt> ");
 
+            System.out.println();
             String[] parsedLine = userInput.split("\\s+");
             parseUser(parsedLine);
 
@@ -144,7 +145,6 @@ public class CommandLine {
 
                 currentPath = command.getPath();
             } else {
-                currentError = "Command not found";
             }
 
             ElementRepertory currentFile = getElementByNer(currentNer);
@@ -200,12 +200,17 @@ public class CommandLine {
         } else if (cmdName.equals("cut") && command.getNer() != -1 && command.getCopy() != null) {
             nameFile = command.getCopy().getName();
             currentNotesTemp.deleteNote(nameFile);
-        } else if (cmdName.equals("cd")) {
+        } else if (cmdName.equals("cd") || cmdName.equals("..") || cmdName.equals(".")) {
             currentNotesTemp = generateNotesFile(command.getPath());
         }
         return currentNotesTemp;
     }
 
+    /**
+     * Affiche les messages d'erreur en jaune dans le terminal,
+     * pour aider l'utilisateur à l'utilisation du programme.
+     * @param message L'instances Note de dossier courant.
+     */
     public void displayError(String message) {
         if (message.equals("")) {
             return;
@@ -322,10 +327,10 @@ public class CommandLine {
     }
 
     /**
-     * Checks if the given string can be parsed as an integer.
-     *
-     * @param str the string to check
-     * @return true if the string can be parsed as an integer, false otherwise
+     * Vérifie si la chaine de charactère est une entier.
+     * @param str la chaine de charactère à vérifier.
+     * @return retourne vrai si la chaine de charactère peut être parse
+     * en entier, sinon retourne faux.
     */
     public static boolean isInteger(final String str) {
         try {
@@ -340,20 +345,20 @@ public class CommandLine {
         return currentRepertoryElements;
     }
     /** contains command.
-     * @param commandName command name
+     * @param commandName nom de la commande.
      * @return commands */
     public boolean containsCommand(final String commandName) {
         return commands.containsKey(commandName);
     }
-    /** Returns the current name.
-     * @return the current name
+    /** Returne le nom courant.
+     * @return le nom courant
     */
     public String getCurrentName() {
         return currentName;
     }
     /**
-     * Returns the current arguments.
-     * @return the current arguments
+     * Returnes l'arguement courant.
+     * @return l'arguement courant.
      */
     public String getCurrentArgs() {
         return currentArgs;
@@ -413,6 +418,9 @@ public class CommandLine {
                 candidates.add(new Candidate("help"));
                 candidates.add(new Candidate("cd"));
                 candidates.add(new Candidate("ls"));
+                candidates.add(new Candidate("mkdir"));
+                candidates.add(new Candidate(".."));
+                candidates.add(new Candidate("find"));
             }
             else {
                 if (wordCount < 2) {
@@ -420,10 +428,16 @@ public class CommandLine {
                     candidates.add(new Candidate("help"));
                     candidates.add(new Candidate("cd"));
                     candidates.add(new Candidate("ls"));
+                    candidates.add(new Candidate("mkdir"));
+                    candidates.add(new Candidate(".."));
+                    candidates.add(new Candidate("."));
+                    candidates.add(new Candidate("find"));
                 }
                 if (!isDirectory) {
                     candidates.add(new Candidate("visu"));
                     candidates.add(new Candidate("copy"));
+                } else {
+                    candidates.add(new Candidate("."));
                 }
                 candidates.add(new Candidate("-"));
                 candidates.add(new Candidate("+"));

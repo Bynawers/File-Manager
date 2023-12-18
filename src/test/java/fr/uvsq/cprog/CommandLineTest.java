@@ -89,14 +89,24 @@ public class CommandLineTest {
         assertTrue(commandLine.containsCommand("+"));
         assertTrue(commandLine.containsCommand("-"));
     }
-    /*
-    @Test
-    public void testmodifyNotes() throws IOException {
-        // test apres avoir fait mkdir et cut
-        File tempDir = Files.createTempDirectory("testDir").toFile();
-        File tempFile = new File(tempDir, "testFile.txt");
-        tempFile.createNewFile();
 
+/*
+    @Test
+    public void testmodifyNotes() {
+        // test apres avoir fait mkdir et cut
+        File tempDir = null;
+        try {
+            tempDir = Files.createTempDirectory("testDir").toFile();
+        } catch (IOException e) {
+        }
+        if (tempDir == null) {
+            return;
+        }
+        File tempFile = new File(tempDir, "testFile.txt");
+        try {
+            tempFile.createNewFile();
+        } catch (IOException e) {
+        }
         CommandLine commandLine = new CommandLine();
         Notes currentNotes = new Notes(new File[]{tempFile}, tempDir.getAbsolutePath());
 
@@ -129,6 +139,7 @@ public class CommandLineTest {
         tempFile.delete();
         tempDir.delete();
     }*/
+
     /*
     @Test
     public void testModifyNotesWithCdAndPastCommands() throws IOException {
@@ -189,5 +200,4 @@ public class CommandLineTest {
     public void testStart() {
         
     }
-    
 }

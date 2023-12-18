@@ -15,10 +15,10 @@ import javax.swing.JLabel;
 public class FileRef extends ElementRepertory {
 
     /**
-     * Constructor for the File class.
-     * @param nameTmp The name of the file.
-     * @param nerTmp  The number of the file.
-     * @param pathTmp The path of the file.
+     * Constructeur de la classe FileRef.
+     * @param nameTmp Le nom du fichier.
+     * @param nerTmp  Le ner du fichier.
+     * @param pathTmp Le chemin du fichier.
      */
     public FileRef(final String nameTmp,
                    final int nerTmp,
@@ -83,7 +83,7 @@ public class FileRef extends ElementRepertory {
                     e.printStackTrace();
                 }
 
-            } if (fileName.endsWith(".jpg") || fileName.endsWith(".png")) {
+            } else if (fileName.endsWith(".jpg") || fileName.endsWith(".png")) {
                 JFrame frame = new JFrame("Image Viewer");
                 ImageIcon imageIcon = new ImageIcon(path);
                 JLabel label = new JLabel(imageIcon);
@@ -92,7 +92,7 @@ public class FileRef extends ElementRepertory {
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
             }
-            else{
+            else {
                 long fileSize = file.length();
                 System.out.println("La taille du fichier est de : "
                                     + fileSize

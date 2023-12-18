@@ -12,10 +12,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-//import org.junit.Test;
-
 public class FileRefTest {
-    /*
     @Test
     public void testVisualization() throws IOException {
         Path tempFile = Files.createTempFile("file", ".txt");
@@ -43,9 +40,8 @@ public class FileRefTest {
         } catch (IOException e) {
             fail("Erreur avec le paths ou la fonction visualization");
         }
-    }*/
+    }
 
-    /*
     @Test
     public void testVisualizationPng() throws IOException {
         // Créer un fichier temporaire pour simuler un fichier PNG
@@ -63,10 +59,10 @@ public class FileRefTest {
         FileRef fileRef = new FileRef(file.getName(), 0, file.getAbsolutePath());
         fileRef.visualization(file.getAbsolutePath());
 
-        String expectedOutputPng = "La taille du fichier est de : " + file.length() + " Ko";
+        String expectedOutputPng = "";
         assertEquals(expectedOutputPng, outputStream.toString().trim());
 
         System.setOut(System.out);
         Files.deleteIfExists(tempFile);
-    }*/
+    }
 }

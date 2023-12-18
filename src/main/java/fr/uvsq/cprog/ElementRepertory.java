@@ -1,21 +1,21 @@
 package fr.uvsq.cprog;
 
 /**
- * Abstract class representing elements in the directory structure.
+ * Classe Abstraite représentant l'élement dans le répertoire.
  */
 public abstract class ElementRepertory {
-    /** The name of the element. */
+    /** Le nom de l'element. */
     private String name;
-    /** The number of the element. */
+    /** Le Ner de l'element. */
     private int ner;
-    /** The path of the element. */
+    /** Le path de l'élément. */
     private String path;
 
     /**
-     * Constructor for the ElementRepertory class.
-     * @param nameTmp The name of the element.
-     * @param nerTmp  The number of each directory (or file).
-     * @param pathTmp The path of the element.
+     * Constructeur de la classe ElementRepertory.
+     * @param nameTmp Le nom de l'element.
+     * @param nerTmp  Le ner de l'élément.
+     * @param pathTmp Le path de l'element.
      */
     public ElementRepertory(final String nameTmp,
                             final int nerTmp,
@@ -26,46 +26,44 @@ public abstract class ElementRepertory {
     }
 
     /**
-     * Gets the name of the element.
-     *
-     * @return The name of the element.
+     * Retourne le nom de l'élément.
+     * @return Le nom de l'élément.
      */
     public String getName() {
         return name;
     }
     /**
-     * set the name of the element.
-     * @param nameTmp The name of the element.
+     * Modifie le nom de l'élément.
+     * @param nameTmp Le nom de l'élément.
      */
     public void setName(final String nameTmp) {
         this.name = nameTmp;
     }
-    /** Gets the path of the element.
-    * @return The path of the element.
+    /** Obtiens le chemin de l"élément.
+    * @return Le chemin de l'élément.
     */
     public String getPath() {
         return path;
     }
     /**
-     * Sets the path for the object.
-     * @param  pathTemp  the new path.
+     * Modifie le chemin de l'élément.
+     * @param  pathTemp le nouveau chemin.
      */
     public void setPath(final String pathTemp) {
         this.path = pathTemp;
     }
 
     /**
-     * Gets the number of the element.
-     * @return The ner of the element.
+     * Obtiens le ner de l'élément.
+     * @return Le ner de l'élément.
      */
     public int getNer() {
         return ner;
     }
 
     /**
-     * Gets the number of the element.
-     *
-     * @return The number of the element.
+     * Modifie le ner de l'élément.
+     * @return ner de l'élément.
      */
     public int setNer() {
         return ner;
@@ -134,14 +132,14 @@ public abstract class ElementRepertory {
         return this;
     }
     /**
-     * Checks if the object represents a directory.
-     * @return true if the object is a directory, false otherwise.
+     * Vérifie si l'object est un dossier.
+     * @return vrai si c'est un dossier sinon faux.
     */
     public abstract boolean isDirectory();
-    /** Checks if the object represents a file.
-     * @return true if the object is a file, false otherwise.
+    /** Vérifie si l'object est un fichier.
+     * @return vrai si c'est un fichier sinon faux.
     */
     public abstract boolean isFile();
-    /** Deletes the object. */
+    /** Supprime l'élément. */
     public abstract void delete();
 }

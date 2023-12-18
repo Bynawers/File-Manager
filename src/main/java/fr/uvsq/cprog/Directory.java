@@ -13,11 +13,10 @@ import org.fusesource.jansi.AnsiConsole;
 public class Directory extends ElementRepertory {
 
     /**
-     * Constructs a new Directory with the specified attributes.
-     *g
-     * @param nameTmp The name of the directory.
-     * @param nerTmp The number of the directory.
-     * @param pathTmp The path of the directory.
+     * Construit une instance de dossier.
+     * @param nameTmp Le nom du dossier.
+     * @param nerTmp Le ner du dossier.
+     * @param pathTmp Le chemin du dossier.
      */
     public Directory(final String nameTmp, final int nerTmp,
                         final String pathTmp) {
@@ -91,8 +90,8 @@ public class Directory extends ElementRepertory {
     }
 
     /**
-     * Find a specific file from its name recursively.
-     * @param name The name of the file to find.
+     * Trouve un fichier spécifique récursivement à partir du dossier courant.
+     * @param name Le nom du fichier à trouver.
      * @param path Le chemin d'accès pour la recherche du fichier.
      */
     public void findRecursive(final String name, final String path) {
@@ -106,7 +105,7 @@ public class Directory extends ElementRepertory {
      * @param directory Le dossier racine de la recherche.
      * @param name Le nom du fichier à trouver.
      * @param path Le chemin d'accès qui sera
-     * affichier si le fichier est trouvé.
+     * afficher si le fichier est trouvé.
      */
     private void searchFile(final File directory,
                                 final String name, final String path) {

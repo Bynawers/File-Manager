@@ -12,17 +12,12 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-//import org.junit.Test;
-
 public class CommandTest {
-        @Test
-    public void shouldAnswerWithTrue()
-    {
+    @Test
+    public void shouldAnswerWithTrue() {
         assertTrue( true );
     }
 
@@ -30,17 +25,13 @@ public class CommandTest {
     public void testExecute() {
         LsCommand lsCommand = new LsCommand();
 
-
         Map<String, ElementRepertory> currentRepertoryElements = new HashMap<>();
         currentRepertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "/Users/charbeltouma/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog/file1.txt"));
         currentRepertoryElements.put("file2.txt", new FileRef("file2.txt", 1, "/Users/charbeltouma/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog/file2.txt"));
-        //currentRepertoryElements.put("dir1", new Directory("dir1", 2, "/Users/charbeltouma/Desktop/cpl_projet/miniprojet-grp-11_22/src/main/java/fr/uvsq/cprog/")); // TODO pourquoi le dir ne s'affiche pas
-
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outContent));
-
 
         lsCommand.setCurrentRepertoryElements(currentRepertoryElements);
         
@@ -55,7 +46,6 @@ public class CommandTest {
         System.setOut(originalOut);
     }
 
- 
     @Test
     public void testGetName() {
         ExitCommand command = new ExitCommand();
@@ -63,7 +53,6 @@ public class CommandTest {
 
     }
 
-    /*
     @Test // Class visuCommand
     public void testExecuteVisualizesFile() throws Exception {
         String content = "Bonjour ceci est un test !";
@@ -90,7 +79,7 @@ public class CommandTest {
         assertEquals(expectedOutput, outputStream.toString().trim());
         assertEquals(name, "visu");
         file.delete();
-    }*/
+    }
 
     @Test
     public void testExecuteFindsFile() throws IOException {
@@ -117,11 +106,11 @@ public class CommandTest {
         tempFile.delete();
         tempDir.delete();
     }
-    /*
+    
     @Test
     public void testCdCommandGoBack() throws Exception {
-        String initialPath = System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22/src" ;
-        String parentPath = System.getProperty("user.home") + "/Desktop/cpl_projet/miniprojet-grp-11_22" ;
+        String initialPath = System.getProperty("user.dir") + "/src" ;
+        String parentPath = System.getProperty("user.dir");
 
         CdCommand command = new CdCommand();
         command.setPath(initialPath);
@@ -130,8 +119,7 @@ public class CommandTest {
 
         assertEquals(parentPath, command.getPath());
         assertEquals(command.getName(), "cd");
-    }*/
-
+    }
 
     @Test
     public void testCdCommand() throws Exception {
@@ -168,33 +156,49 @@ public class CommandTest {
     }
 
     @Test
-    public void testCreateDirectory()  throws Exception{
-        Path tempDir = Files.createTempDirectory("testDirectory");
+    public void testCreateDirectory() {
+        Path tempDir = null;
+        try {
+            tempDir = Files.createTempDirectory("testDirectory");
+        } catch (Exception e) {
+
+        }
+
+        if (tempDir == null) {
+            return;
+        }
         String newDirName = "newDirectory";
 
 
         CreateDirectoryCommand command = new CreateDirectoryCommand();
         command.setPath(tempDir.toString());
         command.setArgs(newDirName);
-        command.execute();
+        try {
+            command.execute();
+        } catch (FileManagerException e) {
+            
+        }
         Path newDirPath = tempDir.resolve(newDirName); //on creer un nouveau path pour le nouveau dossier
         assertTrue(Files.exists(newDirPath) && Files.isDirectory(newDirPath));
         assertEquals(command.getName(), "mkdir");
 
-        Files.deleteIfExists(newDirPath);
-        Files.deleteIfExists(tempDir);
+        try {
+            Files.deleteIfExists(newDirPath);
+            Files.deleteIfExists(tempDir);
+        } catch (IOException e) {
+        }
     }
-    
+
     @Test
     public void testAnnotateCommand() {
         AnnotateCommand command = new AnnotateCommand();
         Map<String, ElementRepertory> repertoryElements = new HashMap<>();
-        File[] fileTab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
+        File[] fileTab = new File[] {new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
 
-        Notes notes = new Notes(fileTab, "/path");
+        Notes notes = new Notes(fileTab, "notes.json");
     
-        repertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "/path/file1.txt"));
-        repertoryElements.put("file2.txt", new FileRef("file2.txt", 0, "/path/file2.txt"));
+        repertoryElements.put("file1.txt", new FileRef("file1.txt", 0, "file1.txt"));
+        repertoryElements.put("file2.txt", new FileRef("file2.txt", 0, "file2.txt"));
         command.setCurrentRepertoryElements(repertoryElements);
 
         command.setNotes(notes);
@@ -215,11 +219,11 @@ public class CommandTest {
         File[] fileTab = new File[]{new File("file1.txt")};
 
 
-        Notes notes = new Notes(fileTab, "/path");
+        Notes notes = new Notes(fileTab, "notes.json");
         notes.addAnnotation("Annotation pour file1.txt", "file1.txt");
 
 
-        ElementRepertory element = new FileRef("file1.txt", 1, "/path/file1.txt");
+        ElementRepertory element = new FileRef("file1.txt", 1, "file1.txt");
         repertoryElements.put("file1.txt", element);
         command.setCurrentRepertoryElements(repertoryElements);
         command.setNotes(notes);
@@ -254,6 +258,7 @@ public class CommandTest {
         assertFalse(Files.exists(tempFile)); // on verifie que le fichier a ete supprimé
         assertEquals(command.getName(), "cut");
     }
+
     @Test
     public void testPastCommand() throws IOException {
         Path tempFile = Files.createTempFile("testFile", ".txt"); // On Créer un fichier temporaire
@@ -272,6 +277,7 @@ public class CommandTest {
         Files.deleteIfExists(tempFile);
         Files.deleteIfExists(targetPath);
     }
+
     @Test
     public void testPastNULLCommand() throws IOException {
         ElementRepertory Copyfile = null;
@@ -280,7 +286,7 @@ public class CommandTest {
         try { command.execute(); } catch(FileManagerException e) { } // past
     }
 
-        @Test
+    @Test
     public void testPastErrCommand() throws IOException {
         ElementRepertory Copyfile = null;
         PastCommand command = new PastCommand(); 

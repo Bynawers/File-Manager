@@ -6,22 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class NotesTest {
-    
-    // TODO new Notes prends en argument un tableau de File[]
+ 
     @Test
     public void testSetPath() {
         Notes notes = new Notes(new File[]{}, "");
@@ -45,7 +39,6 @@ public class NotesTest {
         assertEquals("test", resultAnnotation);
     }
 
-
     @Test
     public void testConstructor() {
         File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
@@ -66,7 +59,7 @@ public class NotesTest {
         assertEquals(3, result.size());
         assertEquals("file1.txt", result.get(0).getName());
     }
-    
+
     @Test
     public void testReadNote() throws IOException {
         String jsonContent = "[{\"name\":\"file1.txt\",\"annotation\":\"Annotation1\"}," +
@@ -86,11 +79,11 @@ public class NotesTest {
 
         Files.deleteIfExists(jsonFile);
     } 
-    
+
     @Test
     public void testDeleteAnnotation() {
-        File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
-        Notes testNotes = new Notes(filetab, "");
+        File[] filetab = new File[] {new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};
+        Notes testNotes = new Notes(filetab, "notes.json");
 
         testNotes.addAnnotation("Anno1", "file1.txt");
         testNotes.addAnnotation("Anno2", "file2.txt");
@@ -101,11 +94,10 @@ public class NotesTest {
         assertEquals("Anno2", testNotes.getAnnotation("file2.txt"));
     }
 
-    // TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testDisplayNotes() {
         File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt")};
-        Notes testNotes = new Notes(filetab, "");
+        Notes testNotes = new Notes(filetab, "notes.json");
 
         testNotes.addAnnotation("Anno1", "file1.txt");
         testNotes.addAnnotation("Anno2", "file2.txt");
@@ -123,7 +115,7 @@ public class NotesTest {
     @Test
     public void testAddNote() {
         File[] filetab = new File[]{};
-        Notes notes = new Notes(filetab, "path");
+        Notes notes = new Notes(filetab, "notes.json");
         String FileName = "file1.txt";
         String newFileName = "file2.txt";
         notes.addNote(FileName);
@@ -142,7 +134,7 @@ public class NotesTest {
     @Test
     public void testdeleteNote() {
         File[] filetab = new File[]{};
-        Notes notes = new Notes(filetab, "path");
+        Notes notes = new Notes(filetab, "notes.json");
 
         notes.addNote("file1.txt");
         notes.addNote("file2.txt");
@@ -173,7 +165,7 @@ public class NotesTest {
         tempFile2.createNewFile();
 
         File[] filetab = new File[]{tempFile1, tempFile2};
-        Notes notes = new Notes(filetab, tempDir.toString());
+        Notes notes = new Notes(filetab, "notes.json");
 
         tempFile2.delete();
 
