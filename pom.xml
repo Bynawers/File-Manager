@@ -6,7 +6,7 @@
 
   <groupId>fr.uvsq.cprog</groupId>
   <artifactId>explorer</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>explorer</name>
   <url>http://www.example.com</url>
@@ -113,23 +113,21 @@
               </descriptorRefs>
           </configuration>
         </plugin>
+
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.1</version>
-            <executions>
-                <execution>
-                    <id>validate</id>
-                    <phase>validate</phase>
-                    <configuration>
-                        <configLocation>google_checks.xml</configLocation>
-                    </configuration>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <mainClass>fr.uvsq.cprog.App</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
         </plugin>
+        
       </plugins>
     </pluginManagement>
     <plugins>

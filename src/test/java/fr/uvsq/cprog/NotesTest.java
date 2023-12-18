@@ -54,7 +54,7 @@ public class NotesTest {
         assertEquals(3, res.size());
         assertEquals("", notes.getPath());
     }
-    // TODO new Notes prends en argument un tableau de File[]
+
     @Test
     public void testSetNotes() {
 
@@ -67,8 +67,6 @@ public class NotesTest {
         assertEquals("file1.txt", result.get(0).getName());
     }
     
-
-    //TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testReadNote() throws IOException {
         String jsonContent = "[{\"name\":\"file1.txt\",\"annotation\":\"Annotation1\"}," +
@@ -89,7 +87,6 @@ public class NotesTest {
         Files.deleteIfExists(jsonFile);
     } 
     
-    //TODO new Notes prends en argument un tableau de File[]
     @Test
     public void testDeleteAnnotation() {
         File[] filetab = new File[]{new File("file1.txt"), new File("file2.txt"), new File("file3.txt")};

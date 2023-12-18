@@ -198,12 +198,10 @@ public class CommandLine {
             currentNotesTemp.addNote(nameFile);
 
         } else if (cmdName.equals("cut") && command.getNer() != -1 && command.getCopy() != null) {
-            System.out.println("----------->" + currentNotesTemp.getPath());
             nameFile = command.getCopy().getName();
             currentNotesTemp.deleteNote(nameFile);
         } else if (cmdName.equals("cd")) {
             currentNotesTemp = generateNotesFile(command.getPath());
-            System.out.println("----------->" + currentNotes.getPath());
         }
         return currentNotesTemp;
     }

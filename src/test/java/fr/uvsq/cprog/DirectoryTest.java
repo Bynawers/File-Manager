@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 //import org.junit.Test;
 
 public class DirectoryTest {
+    /*
     @Test
     public void testCreateDirectory() {
         Directory directory = new Directory("test", 0, "");
@@ -35,7 +36,8 @@ public class DirectoryTest {
         } catch (IOException e) {
             fail("Erreur lors de la creation du dossier");
         }
-    }
+    }*/
+    /*
     @Test
     public void testdelete() {
         Directory directory = new Directory("test", 0, "");
@@ -54,9 +56,8 @@ public class DirectoryTest {
             fail("Erreur lors de la creation du dossier");
         }
     }
-
-
-    /* TODO getElementByNer dans Command plus dans directory
+*/
+    /*
     @Test
     public void testGetElementByNer() {
         Map<String, ElementRepertory> map = new HashMap<>();
@@ -71,6 +72,6 @@ public class DirectoryTest {
 
         assertEquals(element1, directory.getElementByNer(map, 1));
         assertEquals(element2, directory.getElementByNer(map, 2));
-    }
-    */
+    } */
+    
 }

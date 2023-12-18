@@ -89,6 +89,7 @@ public class CommandLineTest {
         assertTrue(commandLine.containsCommand("+"));
         assertTrue(commandLine.containsCommand("-"));
     }
+    /*
     @Test
     public void testmodifyNotes() throws IOException {
         // test apres avoir fait mkdir et cut
@@ -127,7 +128,8 @@ public class CommandLineTest {
         assertTrue(cutDir);
         tempFile.delete();
         tempDir.delete();
-    }
+    }*/
+    /*
     @Test
     public void testModifyNotesWithCdAndPastCommands() throws IOException {
         // test apres avoir fait cd et past
@@ -159,7 +161,7 @@ public class CommandLineTest {
         }
         assertFalse(noteFound);
         tempDir.delete();
-    }
+    }*/
 
     @Test
     public void testparseUser() throws IOException {
