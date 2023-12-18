@@ -21,7 +21,9 @@ public class FileRef extends ElementRepertory {
      * @param nerTmp  The number of the file.
      * @param pathTmp The path of the file.
      */
-    public FileRef(final String nameTmp, final int nerTmp, final String pathTmp) {
+    public FileRef(final String nameTmp,
+                   final int nerTmp,
+                   final String pathTmp) {
         super(nameTmp, nerTmp, pathTmp);
     }
 
@@ -54,12 +56,13 @@ public class FileRef extends ElementRepertory {
             e.printStackTrace();
         }
     }
-    
     /**
-     * Visualise le fichier, si cest un fichier .txt cela affiche le contenu du texte,
+     * Visualise le fichier, si cest un fichier .txt
+     * cela affiche le contenu du texte,
      * sinon cela affiche sa taille.
+     * @param path The path of the file.
      */
-    public void visualization(String path) {
+    public void visualization(final String path) {
         File file = new File(path);
 
         if (file.exists()) {
@@ -67,7 +70,9 @@ public class FileRef extends ElementRepertory {
 
             if (fileName.endsWith(".txt")) {
                 try {
-                    BufferedReader reader = new BufferedReader(new FileReader(path));
+                    BufferedReader reader = new BufferedReader(
+                                            new FileReader(path)
+                                            );
                     StringBuilder content = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
@@ -89,12 +94,13 @@ public class FileRef extends ElementRepertory {
                 frame.setVisible(true);
             }
             else{
-                // fichier n'est pas un .txt
                 long fileSize = file.length();
-                System.out.println("La taille du fichier est de : " + fileSize + " Ko");
+                System.out.println("La taille du fichier est de : "
+                                    + fileSize
+                                    + " Ko");
             }
         } else {
-            // fichier n'existe pas 
+            // fichier n'existe pas
         }
     }
 }

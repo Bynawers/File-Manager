@@ -79,12 +79,21 @@ https://github.com/jline/jline3[JLine] (gestion des saisies)
 
 ### Manuel utilisateur
 
-> Comment l'utilisateur peut savoir quelle commande taper pour un élément du répertoire désigné ?
-> Quelles sont les mises à jours du fichier des annotations à effectuer en fonction des types de commandes ?
-> Y a t il des bibliothèques Java qui permettront de prendre en charge la visualisation d'une image png si l'utilisateur veut l'afficher ? 
-> Quelles sont les commandes qui seraient utiles de rajouter ?
-> Quelles améliorations peut on envisager pour rendre l'usage de l'interface clavier plus souples/efficaces pour l'utilisateur ?
-> Quelles évolutions peut-on envisager ?
+**Savoir quelle commande taper pour un élément du répertoire désigné**
+Une auto-complétion (TAB) est disponible et permet de connaître les commandes exactes que l'utilisateurs peut utiliser en fonction de l'élément courant ainsi que de la structure du prompt.
+**Mises à jours du fichier des annotations à effectuer en fonction des types de commandes**
+mkdir / past : ajout d'une note
+cut : suppression d'une note 
+
+**Bibliothèques Java qui permette de prendre en charge la visualisation d'une image png si l'utilisateur veut l'afficher**
+Il existe plusieurs bibliothèque permettant cela, tel que JavaFx, AWT, Java ImageI/O, dans notre cas nous avons choisi Swing javax. 
+
+**Quelles sont les commandes qui seraient utiles de rajouter ?**
+- **help** pour avoir une liste et une description de chaque commande avec leur utilisation.
+- **exit** pour quitter le programme proprement sans provoquer d'erreur.
+
+**Quelles améliorations peut on envisager pour rendre l'usage de l'interface clavier plus souples/efficaces pour l'utilisateur ?**
+L'implémentation de l'auto-complétion permet d'aider l'utilisateur à trouver plus rapidement les commandes qu'il souhaite et peut utiliser dans le contexte, également à trouver plus rapidement un dossier pour se déplacer.
 
 ## Manuel technique
 ### Compiler le projet
@@ -103,16 +112,35 @@ $ ./mvnw package
 $ java -jar target/explorer-1.0.jar
 ```
 
-##### Rapport de couverture Jacco
+#### Rapport de couverture Jacoco
 Afin d'obtenir le rapport de couvertures des tests, 
 il faut se rendre dans le dossier target du projet, dedans se trouves le dossier repport contenant un fichier index.html, puis ouvrir ce fichier.
 
-##### Bibliothèque utilisées
+#### Bibliothèque utilisées
 Dans ce projet, nous avons utilisé les bibliothèques suivantes : 
+**javafx :** Visualisation d'image pour un fichier .png ou .jpg
+**gson :** Gestion de fichier json.
+**jline :** Prompt de commande personnalisable avec auto-complétion.
+**jansi :** Affichage de texte en couleur dans le terminal. 
+**junit-jupiter :** Effectuer des tests.
+**jacoco :** Couverture des test dans le projet.
+#### Rôles des classes
 
-##### Rôles des classes
+**Command.java :** Ensemble des commandes de structure uniforme ayant un nom et une execution, cette cette classe abstraite permet de rendre le code plus lisible et évite la surcharge de condition if else.
 
-##### Traitement de gestion de commande
+**CommandLine.java :** Classe principale executant le programme et liant chaque classe pour obtenir un programme uniforme.
+
+**ElementRepertory.java :** Classe abstraite représentant un élément du répertoire et permettant la mise en forme des classes FileRef et Directory, cette class contient des informations et fonctions communes aux deux autres classes.
+
+**FileRef.java :** Représente un fichier avec toutes les informations et fonctions necessaire. tel que la visualisation de fichier ou la suppression de fichier.
+
+**Directory.java :** Représente un dossier avec toutes les informations et fonctions necessaire tel que le parcours de dossier, la recherche de fichier ou bien la création de dossier.
+
+**Notes.java :** La classe Notes contient un ensemble d'instance Note, chaque Note est associé à un ElementRepertory (ER) et permet d'effectuer des actions sur le fichier notes.json.
+
+**FileManagerException.java :** Courte classe représentant les exceptions du projet de gestion de fichier.
+
+#### Traitement de gestion de commande
 Afin de gérer l'entrée des commandes de l'utilisateur, nous utilisons un parser personnalisé qui récupère chaque mot de l'entrée et extrait les trois données suivantes :
 - **Le ner** (placé en premier, ou non indiqué)
 - **Le nom de la commande** (placé en premier si le ner n'est pas indiqué, sinon en deuxième)
@@ -130,5 +158,7 @@ argument = promptSplit[1] = "dossier"
 ```
 
 ##### Quelles améliorations peut-on envisager ?
-- Création de fichier et écriture avec nano
-- Déplacement de fichier avec mv
+- Création de fichier et écriture intéractive avec nano/vim.
+- Déplacement de fichier avec mv.
+- Recherche de modèle spécifié  avec grep.
+- Interface grapghique.
